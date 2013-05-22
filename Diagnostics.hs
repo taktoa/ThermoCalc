@@ -26,10 +26,10 @@ small = 0.05
 maxMach = 0.1
 checkMach = mach < maxMach
 --checkStack = Ls < (small/k)
-checkTPD = 2*y0*small > dk
-checkVPD = 2*y0*small > dv
+checkTPD = 2*hr*small > dk
+checkVPD = 2*hr*small > dv
 checkTD = t*small > dt
-checkStack = (y0 > (2*dk)) && (y0 < (4*dk))
+checkStack = (hr > (2*dk)) && (hr < (4*dk))
 
 -------------------------------------------------------------------
 
@@ -63,7 +63,7 @@ dimensionsPrint = do
     putStrLn ("Cap length:          " ++ show' lsph     ++ " mm")
     putStrLn ("HEX length:          " ++ show' lhex     ++ " mm")
     putStrLn ("Cone length:         " ++ show' lc       ++ " mm")
-    putStrLn ("Stack spacing:       " ++ show' (y0/2)   ++ " mm")
+    putStrLn ("Stack spacing:       " ++ show' (hr/2)   ++ " mm")
     putStrLn ("X-section area #1:   " ++ show' xa1      ++ " mm^2")
     putStrLn ("X-section area #2:   " ++ show' xa2      ++ " mm^2")
     putStrLn ("Block ratio:         " ++ show' br       ++ "")

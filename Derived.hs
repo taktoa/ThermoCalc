@@ -12,7 +12,7 @@ cos2 x = cos x ** 2.0
 cot x = 1.0 / tan x
 
 -- Derived dimensions
-br = y0 / (y0 + st)                     -- dimensionless
+br = hr / (hr + st)                     -- dimensionless
 dr = d1/d2                              -- dimensionless
 r1 = d1/2                               -- millimeter
 r2 = d2/2                               -- millimeter
@@ -44,9 +44,9 @@ dp = dpn*p                              -- bar
 dtn = dt / t                            -- dimensionless
 dpn = (vtotali-vtotalf)/vtotal          -- dimensionless
 dk = sqrt (kg / (rho*cp*pi*f))          -- millimeters
-dkn = dk / y0                           -- dimensionless
+dkn = dk / hr                           -- dimensionless
 dv = sqrt (mu / (rho*pi*f))             -- millimeters
-dvn = dv / y0                           -- dimensionless
+dvn = dv / hr                           -- dimensionless
 
 -- Constraints
 tempL = 1 - (dkn * sqrt pr) + (0.5 * pr * (dkn**2))
