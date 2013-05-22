@@ -14,7 +14,7 @@ places :: Int
 places = 12
 show' :: Double -> String
 show' x
-    | al < places       = a ++ (replicate (places - al) '0')
+    | al < places       = a ++ replicate (places - al) '0'
     | al > places       = take places a
     | al == places      = a
     where

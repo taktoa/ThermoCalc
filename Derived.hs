@@ -1,4 +1,6 @@
-module Derived (br, dr, r1, r2, lsph, lhex, lc, lb, wl, xa1, xa2, mach, f, k, dt, dtn, dp, dpn, dk, dkn, qcn, wn, cop, copMax) where
+module Derived (br, dr, r1, r2, lsph, lhex, lc, lb, wl, xa1,
+                xa2, mach, f, k, dt, dtn, dp, dpn, dk, dkn,
+                dv, dvn, qcn, wn, cop, copMax, acc) where
 
 import Input
 import Data.Function (on)
