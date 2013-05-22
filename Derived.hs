@@ -7,9 +7,9 @@ import Data.Function (on)
 import Data.List (minimumBy)
 
 -- Useful functions
-sin2 x = (sin x)**2.0
-cos2 x = (cos x)**2.0
-cot x = 1.0 / (tan x)
+sin2 x = sin x ** 2.0
+cos2 x = cos x ** 2.0
+cot x = 1.0 / tan x
 
 -- Derived dimensions
 br = y0 / (y0 + st)                     -- dimensionless
@@ -18,8 +18,8 @@ r1 = d1/2                               -- millimeter
 r2 = d2/2                               -- millimeter
 lsph = d1/2                             -- millimeter
 u = 100000000*dp/(rho*sos)              -- mm/s
-lhex = (u/omg)*sin(k*lrest)             -- millimeter
-lc = (d1 - d2) / (2.0 * (tan 0.15708))  -- millimeter
+lhex = (u/omg) * sin(k*lrest)           -- millimeter
+lc = (d1 - d2) / (2.0 * tan 0.15708)    -- millimeter
 wl = 4.0 * lt                           -- millimeter
 xa1 = pi * (r1 ** 2.0)                  -- square millimeter
 xa2 = pi * (r2 ** 2.0)                  -- square millimeter
@@ -50,27 +50,27 @@ dvn = dv / y0                           -- dimensionless
 
 -- Constraints
 tempL = 1 - (dkn * sqrt pr) + (0.5 * pr * (dkn**2))
-tempA x = (dkn * (dpn**2) * (sin x)) / (8 * gam * (1 + pr) * tempL)
+tempA x = (dkn * (dpn**2) * sin x) / (8 * gam * (1 + pr) * tempL)
 tempB x l = (dtn * tan x) / ((gam - 1) * br * l)
-tempC = (1 + pr + sqrt pr) / (1 + (sqrt pr))
+tempC = (1 + pr + sqrt pr) / (1 + sqrt pr)
 tempD = 1 - (dkn * sqrt pr) + sqrt pr
-qcn x l = (tempA x) * ((tempC * tempB x l) - tempD)
+qcn x l = tempA x * ((tempC * tempB x l) - tempD)
 
 tempE x l = (dkn * l * (dpn**2) * (gam - 1) * br * cos2 x) / (4 * gam)
-tempF x l = (dtn * tan x) / (br * l * (gam - 1) * (1 + (sqrt pr)) * tempL)
-tempG x l = (dkn * l * (dpn**2) * (sqrt pr) * (sin2 x)) / (4 * gam * br * tempL)
-wn x l = ((tempE x l) * ((tempF x l) - 1)) - (tempG x l)
+tempF x l = (dtn * tan x) / (br * l * (gam - 1) * (1 + sqrt pr) * tempL)
+tempG x l = (dkn * l * (dpn**2) * sqrt pr * sin2 x) / (4 * gam * br * tempL)
+wn x l = (tempE x l * (tempF x l - 1)) - tempG x l
 
-cop xn ln = (qcn xn ln) / (wn xn ln)
+cop x l = qcn x l / wn x l
 
 ---
 
 tempH lb = cot (k*(lt - (lsph + (2*lc) + lb)))
 tempI lb = (dr**2) * tan (k*(lb + lc))
-optHI lb = abs ((tempH lb) - (tempI lb))
+optHI lb = abs (tempH lb - tempI lb)
 acc = 0.01
 lmax = lt - ((2*lc) + lsph)
-brckt = ((lmax/2), lmax)
+brckt = (lmax/2, lmax)
 findRoots f start stop step = [x | x <- [start, start+step .. stop], abs (f x) < step]
 rootXs = uncurry (findRoots optHI) brckt acc
 rootYs = map optHI rootXs

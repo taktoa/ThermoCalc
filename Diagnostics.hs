@@ -18,7 +18,7 @@ show' x
     | al > places       = take places a
     | al == places      = a
     where
-    a = show (realFracToDecimal ((fromIntegral places)::Word8) x)
+    a = show (realFracToDecimal (fromIntegral places :: Word8) x)
     al = length a
 
 -- Checks
@@ -113,12 +113,12 @@ diagnostic = do
             | a < 0         = 0
             | otherwise     = a
             where
-            a = (qcn x l) --a = cop x l, a = cop 0.25 l
+            a = cop x l --a = qcn x l, a = cop 0.25 l
     let func = Function3D options options3D nonan
-    plot' [Interactive] X11 $ func
+    plot' [Interactive] X11 func
 --    let options = [Title "COP vs L"]
 --    let options2D = [Range 0 1, Step (acc*2)]
 --    let func = Function2D options options2D nonan
---    plot' [Interactive] X11 $ func
+--    plot' [Interactive] X11 func
 
 
