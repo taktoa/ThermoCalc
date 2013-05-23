@@ -8,12 +8,12 @@ import Graphics.EasyPlot
 -- Checks
 small = 0.05
 maxMach = 0.1
-checkMach = mach < maxMach			-- At Mach numbers greater than 0.1, equations break down
---checkStack = Ls < (small/k)			-- The pressure across the stack should be constant along its length
-checkTPD = 2*hr*small > dk			-- Stack spacing should be much bigger than dk
-checkVPD = 2*hr*small > dv			-- Stack spacing should be much bigger than dv
-checkTD = t*small > dt				-- Temp differential should be small compared to average temp
-checkStack = (hr > (2*dk)) && (hr < (4*dk))	-- To avoid acoustic effects, hr should be in this range
+checkMach = mach < maxMach                  -- At Mach numbers greater than 0.1, equations break down
+--checkStack = Ls < (small/k)               -- The pressure across the stack should be constant along its length
+checkTPD = 2*hr*small > dk                  -- Stack spacing should be much bigger than dk
+checkVPD = 2*hr*small > dv                  -- Stack spacing should be much bigger than dv
+checkTD = t*small > dt                      -- Temp differential should be small compared to average temp
+checkStack = (hr > (2*dk)) && (hr < (4*dk)) -- To avoid acoustic effects, hr should be in this range
 
 -------------------------------------------------------------------
 
@@ -39,7 +39,7 @@ gaspropPrint = do
 
 dimensionsPrint = do
     putStrLn "------------------"
-    putStrLn "DIMENSIONS:"    
+    putStrLn "DIMENSIONS:"
     putStrLn ("Diameter #1:         " ++ show' d1       ++ " mm")
     putStrLn ("Diameter #2:         " ++ show' d2       ++ " mm")
     putStrLn ("Total length:        " ++ show' lt       ++ " mm")
