@@ -2,34 +2,18 @@ module Diagnostics where
 
 import Input
 import Derived
+import Utility (show', places)
 import Graphics.EasyPlot
-import Math.Root.Finder
-import Data.Function (on)
-import Data.List (minimumBy)
-import Data.Decimal
-import Data.Word
-
--- Useful functions
-places :: Int
-places = 12
-show' :: Double -> String
-show' x
-    | al < places       = a ++ replicate (places - al) '0'
-    | al > places       = take places a
-    | al == places      = a
-    where
-    a = show (realFracToDecimal (fromIntegral places :: Word8) x)
-    al = length a
 
 -- Checks
 small = 0.05
 maxMach = 0.1
-checkMach = mach < maxMach
---checkStack = Ls < (small/k)
-checkTPD = 2*hr*small > dk
-checkVPD = 2*hr*small > dv
-checkTD = t*small > dt
-checkStack = (hr > (2*dk)) && (hr < (4*dk))
+checkMach = mach < maxMach			-- At Mach numbers greater than 0.1, equations break down
+--checkStack = Ls < (small/k)			-- The pressure across the stack should be constant along its length
+checkTPD = 2*hr*small > dk			-- Stack spacing should be much bigger than dk
+checkVPD = 2*hr*small > dv			-- Stack spacing should be much bigger than dv
+checkTD = t*small > dt				-- Temp differential should be small compared to average temp
+checkStack = (hr > (2*dk)) && (hr < (4*dk))	-- To avoid acoustic effects, hr should be in this range
 
 -------------------------------------------------------------------
 

@@ -3,13 +3,9 @@ module Derived (br, dr, r1, r2, lsph, lhex, lc, lb, wl, xa1,
                 dv, dvn, qcn, wn, cop, copMax, acc) where
 
 import Input
+import Utility (sin2, cos2, cot)
 import Data.Function (on)
 import Data.List (minimumBy)
-
--- Useful functions
-sin2 x = sin x ** 2.0
-cos2 x = cos x ** 2.0
-cot x = 1.0 / tan x
 
 -- Derived dimensions
 br = hr / (hr + st)                     -- dimensionless

@@ -1,6 +1,6 @@
 module Input where
 
--- This is where all of the variables live.
+import Utility (e)
 
 -- Input variables
 p = 10.0                                -- bar              -- pressure
@@ -55,6 +55,3 @@ kg = ((2.38889 `e` (-4)) * t) ** 0.710  -- W / (m*K)        -- thermal conductiv
 mu = ((7.96389 `e` (-6)) * t) ** 0.647  -- centipoise       -- viscosity
 rho = ((47.90903 * p) + 0.1472) / t     -- g/mL             -- density
 pr = (mu*cp)/kg                         -- dimensionless    -- Prandtl number
-
--- Utility functions
-e a b = a * (10.0 ** b)
