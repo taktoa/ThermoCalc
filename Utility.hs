@@ -4,16 +4,22 @@ module Utility where
 import Data.Decimal
 import Data.Word
 
-e a b = a * (10.0 ** b)
+e a b = a * (10.0 ** b)             -- "e" function; i.e.: 1.3e6 = 1.3 * (10^6) = 1300000
 
-sin2 x = sin x ** 2.0
+sin2 x = sin x ** 2.0               -- Trigonometric utility functions
 cos2 x = cos x ** 2.0
+tan2 x = tan x ** 2.0
+csc x = 1.0 / sin x
+sec x = 1.0 / cos x
 cot x = 1.0 / tan x
+csc2 x = csc x ** 2.0
+sec2 x = sec x ** 2.0
+cot2 x = cot x ** 2.0
 
-places :: Int
+places :: Int                       -- Max number of decimal places in a printed number
 places = 12
 
-show' :: Double -> String
+show' :: Double -> String           -- Prints fixed-length numbers
 show' x
     | al < places       = a ++ replicate (places - al) '0'
     | al > places       = take places a
