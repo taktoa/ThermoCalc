@@ -89,7 +89,7 @@ diagnostic = do
     syspropPrint
     diagChecks
     let options = [Title "COP vs x and L"]
-    let options3D = [RangeX 0 1, RangeY 0 1, StepX acc, StepY acc]
+    let options3D = [RangeX 0 1, RangeY 0 1, StepX (2*acc), StepY (2*acc)]
     --let options3D = [RangeX 0 0.3, RangeY 0 0.3, StepX acc, StepY acc]
     let nonan x l
             | isNaN a       = 0
