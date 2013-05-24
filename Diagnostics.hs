@@ -82,14 +82,25 @@ diagChecks = do
     putStrLn (if checkStack then "Stack check passed."          else "Stack check failed!")
     putStrLn ""
 
+heatExchangerPrint = do
+    putStrLn "------------------"
+    putStrLn "HEX Properties:"
+    putStrLn ("Diameter:            " ++ show' d1       ++ " mm")
+    putStrLn ("Length:              " ++ show' lhex     ++ " mm")
+    putStrLn ("Blockage ratio:      " ++ show' br       ++ " mm")
+    putStrLn ""
+
+
+
+
 diagnostic = do
     enviroPrint
     gaspropPrint
     dimensionsPrint
     syspropPrint
     diagChecks
-    let options = [Title "COP vs x and L"]
-    let options3D = [RangeX 0 1, RangeY 0 1, StepX (2*acc), StepY (2*acc)]
+--    let options = [Title "COP vs x and L"]
+--    let options3D = [RangeX 0 1, RangeY 0 1, StepX (2*acc), StepY (2*acc)]
     --let options3D = [RangeX 0 0.3, RangeY 0 0.3, StepX acc, StepY acc]
     let nonan x l
             | isNaN a       = 0
@@ -98,11 +109,11 @@ diagnostic = do
             | otherwise     = a
             where
             a = cop x l --a = qcn x l, a = cop 0.25 l
-    let func = Function3D options options3D nonan
-    plot' [Interactive] X11 func
---    let options = [Title "COP vs L"]
---    let options2D = [Range 0 1, Step (acc*2)]
---    let func = Function2D options options2D nonan
+--    let func = Function3D options options3D nonan
 --    plot' [Interactive] X11 func
+    let options = [Title "COP vs L"]
+    let options2D = [Range 0 1, Step (acc*2)]
+    let func = Function2D options options2D (nonan 0.25)
+    plot' [Interactive] X11 func
 
 

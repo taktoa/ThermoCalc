@@ -17,7 +17,7 @@ sec2 x = sec x ** 2.0
 cot2 x = cot x ** 2.0
 
 places :: Int                       -- Max number of decimal places in a printed number
-places = 12
+places = 10
 
 show' :: Double -> String           -- Prints fixed-length numbers
 show' x
