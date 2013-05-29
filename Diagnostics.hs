@@ -84,13 +84,11 @@ diagChecks = do
 
 heatExchangerPrint = do
     putStrLn "------------------"
-    putStrLn "HEX Properties:"
+    putStrLn "HEX PROPERTIES:"
     putStrLn ("Diameter:            " ++ show' d1       ++ " mm")
     putStrLn ("Length:              " ++ show' lhex     ++ " mm")
     putStrLn ("Blockage ratio:      " ++ show' br       ++ " mm")
     putStrLn ""
-
-
 
 
 diagnostic = do
@@ -98,22 +96,23 @@ diagnostic = do
     gaspropPrint
     dimensionsPrint
     syspropPrint
+    heatExchangerPrint
     diagChecks
 --    let options = [Title "COP vs x and L"]
 --    let options3D = [RangeX 0 1, RangeY 0 1, StepX (2*acc), StepY (2*acc)]
-    --let options3D = [RangeX 0 0.3, RangeY 0 0.3, StepX acc, StepY acc]
+    let options3D = [RangeX 0 1, RangeY 0 0.2, StepX (2*acc), StepY (acc/5)]
     let nonan x l
             | isNaN a       = 0
-            | a > copMax    = copMax
             | a < 0         = 0
-            | otherwise     = a
+            | a > 50        = 0
+            | otherwise     = 5*a
             where
-            a = cop x l --a = qcn x l, a = cop 0.25 l
---    let func = Function3D options options3D nonan
---    plot' [Interactive] X11 func
+            a = (p * sos * xa1) * (qcn x l) --a = qcn x l, a = cop 0.25 l
     let options = [Title "COP vs L"]
-    let options2D = [Range 0 1, Step (acc*2)]
-    let func = Function2D options options2D (nonan 0.25)
+    let func = Function3D options options3D nonan
+--    plot' [Interactive] X11 func
+--    let options2D = [Range 0 1, Step (acc*2)]
+--    let func = Function2D options options2D (nonan)
     plot' [Interactive] X11 func
 
 
