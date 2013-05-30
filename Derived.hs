@@ -1,7 +1,5 @@
 -- Derived values, calculated based on the input constants
-module Derived (br, dr, r1, r2, lsph, lhex, lc, lb, wl, xa1,
-                xa2, mach, f, k, dt, dtn, dp, dpn, dk, dkn,
-                dv, dvn, qcn, wn, cop, copMax, acc) where
+module Derived where
 
 import Input
 import Utility (sin2, cos2, cot)
@@ -9,6 +7,9 @@ import Data.Function (on)
 import Data.List (minimumBy)
 
 -- Derived dimensions
+lran = 1-ltan                           -- DL       -- UGH
+lta = ltan * lrest                      -- mm       -- Tube A length
+lr = lran * lrest                       -- mm       -- Regenerator length
 br = hr / (hr + st)                     -- DL       -- Blockage ratio
 dr = d1/d2                              -- DL       -- Diameter ratio
 r1 = d1/2                               -- mm       -- Radius 1
@@ -16,15 +17,18 @@ r2 = d2/2                               -- mm       -- Radius 2
 lsph = d1/2                             -- mm       -- Semispherical endcap length
 u = 100000000*dp/(rho*sos)              -- mm/s     -- Temporary variable
 lhex = (u/omg) * sin(k*lrest)           -- mm       -- Heat exchanger length
-theta = 9.0                             -- deg      -- Cone half-angle
-thetaRad = theta * (pi/180)             -- rad      -- Cone half-angle
-lc = (d1 - d2) / (2.0 * tan thetaRad)   -- mm       -- Cone length
+angRad = ang * (pi/180)                 -- rad      -- Cone half-angle
+lc = (d1 - d2) / (2.0 * tan angRad)     -- mm       -- Cone length
 wl = 4.0 * lt                           -- mm       -- Wavelength
 xa1 = pi * (r1 ** 2.0)                  -- mm^2     -- Cross-sectional area 1
 xa2 = pi * (r2 ** 2.0)                  -- mm^2     -- Cross-sectional area 2
-vc = pi*lb*((r1**2)+(r2**2)+(r1*r2))/3  -- mm^3     -- Cone volume
+vc = pi*lc*((r1**2)+(r2**2)+(r1*r2))/3  -- mm^3     -- Cone volume
 vb = xa2*lb                             -- mm^3     -- Thin tube volume
 vsph = (4/3)*pi*(lsph**3)               -- mm^3     -- Endcap volume
+vhex = xa1*lhex                         -- mm^3     -- Heat exchanger volume
+vta = xa1*lta                           -- mm^3     -- Volume of Tube A
+vr = xa1*lr                             -- mm^3     -- Regenerator volume (total)
+vra = xa1*lr*(1-br)                     -- mm^3     -- Regenerator volume (gas)
 lrest = lt - ((2*lc)+lb+lsph)           -- mm       -- Length of the rest of the resonator
 vrest = xa1*lrest                       -- mm^3     -- Volume thereof
 vresti = xa1*(lrest+spxmax)             -- mm^3     -- Volume at maximum negative speaker displacement (MNSD)

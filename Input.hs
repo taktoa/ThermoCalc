@@ -14,16 +14,18 @@ d1 = 83.41                              -- mm               -- Large tube diamet
 d2 = 44.58                              -- mm               -- Small tube diameter
 hr = 0.2925                             -- mm               -- Regenerator hydraulic radius
 st = 0.06                               -- mm               -- Proxy for blockage ratio
+ang = 9.0                               -- deg              -- Cone half-angle
+ltan = 0.75                             -- DL               -- FOR THE LOVE OF GOD REMOVE THIS
 
 -- Speaker Properties
 -- These values are for the speaker at: http://goo.gl/DwMs7
 -- Feel free to substitute your own Thiele-Small parameters
-spPrms = 25                             -- W                -- RMS power handling
-spPmax = 50                             -- W                -- Maximum power input
-spfmin = 80                             -- Hz               -- Minimum frequency
-spfmax = 6000                           -- Hz               -- Maximum frequency
-spfres = 77                             -- Hz               -- Resonant frequency
-sps = 86                                -- dB 1W / 1m       -- Speaker sensitivity
+spPrms = 25.0                           -- W                -- RMS power handling
+spPmax = 50.0                           -- W                -- Maximum power input
+spfmin = 80.0                           -- Hz               -- Minimum frequency
+spfmax = 6000.0                         -- Hz               -- Maximum frequency
+spfres = 77.0                           -- Hz               -- Resonant frequency
+sps = 86.0                              -- dB 1W / 1m       -- Speaker sensitivity
 sprdc = 5.6                             -- ohm              -- DC coil resistance
 spinduc = 0.60                          -- mH               -- Coil inductance
 spqms = 2.43                            -- DL               -- Mechanical Q
@@ -33,10 +35,10 @@ spvas = 5.1                             -- L                -- Compliance volume
 spxmax = 1.5                            -- mm               -- Speaker cone movement
 
 -- Speaker Dimensions
-splen = 60                              -- mm               -- Speaker length
-spdsmall = 115                          -- mm               -- Diameter of active speaker area
-spdscrew = 127                          -- mm               -- Diameter of speaker screws 
-spdtotal = 146                          -- mm               -- Total speaker diameter
+splen = 60.0                            -- mm               -- Speaker length
+spdsmall = 115.0                        -- mm               -- Diameter of active speaker area
+spdscrew = 127.0                        -- mm               -- Diameter of speaker screws 
+spdtotal = 146.0                        -- mm               -- Total speaker diameter
 
 -------------------------------------------------------------------------------------
 -- If you are using helium as your working fluid, don't change anything below here --

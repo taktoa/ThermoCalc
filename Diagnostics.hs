@@ -18,14 +18,14 @@ checkStack = (hr > (2*dk)) && (hr < (4*dk)) -- To avoid acoustic effects, hr sho
 -------------------------------------------------------------------
 
 enviroPrint = do
-    putStrLn "------------------"
+    putStrLn "-------------------"
     putStrLn "ENVIRONMENT:"
     putStrLn ("Pressure:            " ++ show' p        ++ " bar")
     putStrLn ("Temp:                " ++ show' t        ++ " K")
     putStrLn ""
 
 gaspropPrint = do
-    putStrLn "------------------"
+    putStrLn "-------------------"
     putStrLn "GAS PROPERTIES:"
     putStrLn ("C_p:                 " ++ show' cp       ++ " J/(g*K)")
     putStrLn ("C_v:                 " ++ show' cv       ++ " J/(g*K)")
@@ -38,7 +38,7 @@ gaspropPrint = do
     putStrLn ""
 
 dimensionsPrint = do
-    putStrLn "------------------"
+    putStrLn "-------------------"
     putStrLn "DIMENSIONS:"
     putStrLn ("Diameter #1:         " ++ show' d1       ++ " mm")
     putStrLn ("Diameter #2:         " ++ show' d2       ++ " mm")
@@ -55,7 +55,7 @@ dimensionsPrint = do
     putStrLn ""
 
 syspropPrint = do
-    putStrLn "------------------"
+    putStrLn "-------------------"
     putStrLn "SYSTEM PROPERTIES:"
     putStrLn ("Mach #:              " ++ show' mach     ++ " Mach")
     putStrLn ("Maximum COP:         " ++ show' copMax   ++ "")
@@ -73,7 +73,7 @@ syspropPrint = do
     putStrLn ""
 
 diagChecks = do
-    putStrLn "------------------"
+    putStrLn "-------------------"
     putStrLn "DIAGNOSTICS:"
     putStrLn (if checkMach  then "Mach number check passed."    else "Mach number too high!")
     putStrLn (if checkTPD   then "TPD check passed."            else "TPD check failed!")
@@ -82,12 +82,72 @@ diagChecks = do
     putStrLn (if checkStack then "Stack check passed."          else "Stack check failed!")
     putStrLn ""
 
+speakerPrint = do
+    putStrLn "-------------------"
+    putStrLn "SPEAKER PROPERTIES:"
+    putStrLn ("Diameter (inner):    " ++ show' spdsmall ++ " mm")
+    putStrLn ("Diameter (screw):    " ++ show' spdscrew ++ " mm")
+    putStrLn ("Diameter (total):    " ++ show' spdtotal ++ " mm")
+    putStrLn ("Length:              " ++ show' splen    ++ " mm")
+    putStrLn ""
+
+bigTubePrint = do
+    putStrLn "-------------------"
+    putStrLn "TUBE A PROPERTIES:"
+    putStrLn ("Diameter:            " ++ show' d1       ++ " mm")
+    putStrLn ("Length:              " ++ show' lta      ++ " mm")
+    putStrLn ("Cross-section area:  " ++ show' xa1      ++ " mm^2")
+    putStrLn ("Volume:              " ++ show' vta      ++ " mm^3")
+    putStrLn ""
+
 heatExchangerPrint = do
-    putStrLn "------------------"
+    putStrLn "-------------------"
     putStrLn "HEX PROPERTIES:"
     putStrLn ("Diameter:            " ++ show' d1       ++ " mm")
     putStrLn ("Length:              " ++ show' lhex     ++ " mm")
     putStrLn ("Blockage ratio:      " ++ show' br       ++ " mm")
+    putStrLn ("Cross-section area:  " ++ show' xa1      ++ " mm^2")
+    putStrLn ("Volume:              " ++ show' vhex     ++ " mm^3")
+    putStrLn ""
+
+regenPrint = do
+    putStrLn "-------------------"
+    putStrLn "REGEN PROPERTIES:"
+    putStrLn ("Diameter:            " ++ show' d1       ++ " mm")
+    putStrLn ("Length:              " ++ show' lr       ++ " mm")
+    putStrLn ("Blockage ratio:      " ++ show' br       ++ "")
+    putStrLn ("Hydraulic radius:    " ++ show' hr       ++ " mm")
+    putStrLn ("Stack spacing:       " ++ show' (hr/2)   ++ " mm")
+    putStrLn ("Plate thickness:     " ++ show' st       ++ " mm")
+    putStrLn ("Cross-section area:  " ++ show' xa1      ++ " mm^2")
+    putStrLn ("Volume:              " ++ show' vr       ++ " mm^3")
+    putStrLn ""
+
+conePrint = do
+    putStrLn "-------------------"
+    putStrLn "CONE PROPERTIES:"
+    putStrLn ("Start Diameter:      " ++ show' d1       ++ " mm")
+    putStrLn ("End Diameter:        " ++ show' d2       ++ " mm")
+    putStrLn ("Length:              " ++ show' lc       ++ " mm")
+    putStrLn ("Opening Angle:       " ++ show' (2*ang)  ++ " deg")
+    putStrLn ("Volume:              " ++ show' vc       ++ " mm^3")
+    putStrLn ""
+
+smallTubePrint = do
+    putStrLn "-------------------"
+    putStrLn "TUBE B PROPERTIES:"
+    putStrLn ("Diameter:            " ++ show' d2       ++ " mm")
+    putStrLn ("Length:              " ++ show' lb       ++ " mm")
+    putStrLn ("Cross-section area:  " ++ show' xa2      ++ " mm^2")
+    putStrLn ("Volume:              " ++ show' vb       ++ " mm^3")
+    putStrLn ""
+
+capPrint = do
+    putStrLn "-------------------"
+    putStrLn "CAP PROPERTIES:"
+    putStrLn ("Diameter:            " ++ show' d1       ++ " mm")
+    putStrLn ("Length:              " ++ show' lsph     ++ " mm")
+    putStrLn ("Volume:              " ++ show' vsph     ++ " mm^3")
     putStrLn ""
 
 
