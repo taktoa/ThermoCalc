@@ -104,15 +104,13 @@ diagnostic = do
     let nonan x l
             | isNaN a       = 0
             | a < 0         = 0
-            | a > 50        = 0
-            | otherwise     = 5*a
+            | a > 100       = 100
+            | otherwise     = a
             where
-            a = (p * sos * xa1) * (qcn x l) --a = qcn x l, a = cop 0.25 l
+            a = p * sos * xa1 * (qcn x l) --a = qcn x l, a = cop 0.25 l
     let options = [Title "COP vs L"]
     let func = Function3D options options3D nonan
 --    plot' [Interactive] X11 func
 --    let options2D = [Range 0 1, Step (acc*2)]
 --    let func = Function2D options options2D (nonan)
     plot' [Interactive] X11 func
-
-
