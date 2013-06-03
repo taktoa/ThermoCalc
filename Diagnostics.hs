@@ -9,11 +9,11 @@ import Graphics.EasyPlot
 small = 0.05
 maxMach = 0.1
 checkMach = mach < maxMach                  -- At Mach numbers greater than 0.1, equations break down
---checkStack = Ls < (small/k)               -- The pressure across the stack should be constant along its length
-checkTPD = 2*hr*small > dk                  -- Stack spacing should be much bigger than dk
-checkVPD = 2*hr*small > dv                  -- Stack spacing should be much bigger than dv
-checkTD = t*small > dt                      -- Temp differential should be small compared to average temp
-checkStack = (hr > (2*dk)) && (hr < (4*dk)) -- To avoid acoustic effects, hr should be in this range
+checkStack = lr < (small/k)                 -- The pressure across the stack should be constant along its length
+checkTPD = dk < 2*hr*small                  -- Stack spacing should be much bigger than dk
+checkVPD = dv < 2*hr*small                  -- Stack spacing should be much bigger than dv
+checkTD = dt < t*small                      -- Temp differential should be small compared to average temp
+--checkStack = (hr > (2*dk)) && (hr < (4*dk)) -- To avoid acoustic effects, hr should be in this range
 
 -------------------------------------------------------------------
 
@@ -37,27 +37,11 @@ gaspropPrint = do
     putStrLn ("Density:             " ++ show' rho      ++ " g/mL")
     putStrLn ""
 
-dimensionsPrint = do
-    putStrLn "-------------------"
-    putStrLn "DIMENSIONS:"
-    putStrLn ("Diameter #1:         " ++ show' d1       ++ " mm")
-    putStrLn ("Diameter #2:         " ++ show' d2       ++ " mm")
-    putStrLn ("Total length:        " ++ show' lt       ++ " mm")
-    putStrLn ("Thin tube length:    " ++ show' lb       ++ " mm")
-    putStrLn ("Cap length:          " ++ show' lsph     ++ " mm")
-    putStrLn ("HEX length:          " ++ show' lhex     ++ " mm")
-    putStrLn ("Cone length:         " ++ show' lc       ++ " mm")
-    putStrLn ("Stack spacing:       " ++ show' (hr/2)   ++ " mm")
-    putStrLn ("X-section area #1:   " ++ show' xa1      ++ " mm^2")
-    putStrLn ("X-section area #2:   " ++ show' xa2      ++ " mm^2")
-    putStrLn ("Block ratio:         " ++ show' br       ++ "")
-    putStrLn ("Radius ratio:        " ++ show' dr       ++ "")
-    putStrLn ""
-
 syspropPrint = do
     putStrLn "-------------------"
     putStrLn "SYSTEM PROPERTIES:"
     putStrLn ("Mach #:              " ++ show' mach     ++ " Mach")
+    putStrLn ("Actual COP:          " ++ show' copAct   ++ "")
     putStrLn ("Maximum COP:         " ++ show' copMax   ++ "")
     putStrLn ("Frequency:           " ++ show' f        ++ " Hz")
     putStrLn ("Wavelength:          " ++ show' wl       ++ " mm")
@@ -154,12 +138,17 @@ capPrint = do
 diagnostic = do
     enviroPrint
     gaspropPrint
-    dimensionsPrint
     syspropPrint
+    bigTubePrint
     heatExchangerPrint
+    regenPrint
+    smallTubePrint
+    conePrint
+    capPrint
     diagChecks
-    let options = [Title "COP vs X"]
-    let options2D = [Range 0 1, Step acc]
-    let func = Function2D options options2D (fCOP)
-    plot' [Interactive] X11 func
-    putStrLn "Done."
+--    let options = [Title "COP vs X"]
+--    let options2D = [Range 0 1, Step acc]
+--    let func = Function2D options options2D (optX)
+--    plot' [Interactive] X11 func
+--    putStrLn ("xn: " ++ show' xn)
+--    putStrLn "Done."

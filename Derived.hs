@@ -78,7 +78,8 @@ fCOP x
     a = cop x ((4*pi*lrest/wl) - (2 * x))
 
 optX x = abs (copMax - (fCOP x))
-xn = bestRoot acc (0, 1) optX                       -- Best root x-value
+xn = bestRoot optX (0, 1) acc                       -- Best root x-value
+copAct = fCOP xn                                    -- Actual COP
 
 ---
 
@@ -86,5 +87,5 @@ tempH lb = cot (k*(lt - (lsph + (2*lc) + lb)))      -- Impedance of one side
 tempI lb = (dr**2) * tan (k*(lb + lc))              -- Impedance of the other side
 optHI lb = abs (tempH lb - tempI lb)                -- Impedance-matching fitness function
 lmax = lt - ((2*lc) + lsph)                         -- Maximum possible length for lb
-bestl = bestRoot acc (lmax/2, lmax) optHI           -- Best root x-value
+bestl = bestRoot optHI (lmax/2, lmax) acc           -- Best root x-value
 lb = lmax - bestl                                   -- Because this is the bigger root
