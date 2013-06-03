@@ -2,7 +2,7 @@ module Diagnostics where
 
 import Input
 import Derived
-import Utility (show', places)
+import Utility (show', places, acc)
 import Graphics.EasyPlot
 
 -- Checks
@@ -158,19 +158,8 @@ diagnostic = do
     syspropPrint
     heatExchangerPrint
     diagChecks
---    let options = [Title "COP vs x and L"]
---    let options3D = [RangeX 0 1, RangeY 0 1, StepX (2*acc), StepY (2*acc)]
-    let options3D = [RangeX 0 1, RangeY 0 0.2, StepX (2*acc), StepY (acc/5)]
-    let nonan x l
-            | isNaN a       = 0
-            | a < 0         = 0
-            | a > 100       = 100
-            | otherwise     = a
-            where
-            a = p * sos * xa1 * (qcn x l) --a = qcn x l, a = cop 0.25 l
-    let options = [Title "COP vs L"]
-    let func = Function3D options options3D nonan
---    plot' [Interactive] X11 func
---    let options2D = [Range 0 1, Step (acc*2)]
---    let func = Function2D options options2D (nonan)
+    let options = [Title "COP vs X"]
+    let options2D = [Range 0 1, Step acc]
+    let func = Function2D options options2D (fCOP)
     plot' [Interactive] X11 func
+    putStrLn "Done."

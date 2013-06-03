@@ -2,14 +2,12 @@
 module Derived where
 
 import Input
-import Utility (sin2, cos2, cot)
-import Data.Function (on)
-import Data.List (minimumBy)
+import Utility (sin2, cos2, cot, bestRoot, acc)
 
 -- Derived dimensions
-lran = 1-ltan                           -- DL       -- UGH
-lta = ltan * lrest                      -- mm       -- Tube A length
-lr = lran * lrest                       -- mm       -- Regenerator length
+lr = (2*lrest) - ((wl * xn) / pi)
+lta = lrest - lr
+
 br = hr / (hr + st)                     -- DL       -- Blockage ratio
 dr = d1/d2                              -- DL       -- Diameter ratio
 r1 = d1/2                               -- mm       -- Radius 1
@@ -69,22 +67,24 @@ wn x l = (tempE x l * (tempF x l - 1)) - tempG x l  -- Normalized input work
 
 cop x l = qcn x l / wn x l                          -- Coefficient of performance
 
+copMax = (t - dt) / dt                              -- Maximum COP based on Carnot cycle
+
+fCOP x
+    | isNaN a       = 0
+    | a < 0         = 0
+    | a > copMax    = copMax
+    | otherwise     = a
+    where
+    a = cop x ((4*pi*lrest/wl) - (2 * x))
+
+optX x = abs (copMax - (fCOP x))
+xn = bestRoot acc (0, 1) optX                       -- Best root x-value
+
 ---
 
 tempH lb = cot (k*(lt - (lsph + (2*lc) + lb)))      -- Impedance of one side
 tempI lb = (dr**2) * tan (k*(lb + lc))              -- Impedance of the other side
 optHI lb = abs (tempH lb - tempI lb)                -- Impedance-matching fitness function
-acc = 0.01                                          -- Accuracy of the root-finder
 lmax = lt - ((2*lc) + lsph)                         -- Maximum possible length for lb
-brckt = (lmax/2, lmax)                              -- Get the bigger root
-findR f (m,n) d = [x | x <- [m,(m+d)..n], f x < d]  -- Naive root finder function
-rootXs = findR optHI brckt acc                      -- Find the root x-values
-rootYs = map optHI rootXs                           -- Find the fitness of each root
-zrootYs = zip [0 .. length rootYs] rootYs           -- Add indices to each root
-index = fst (minimumBy (compare `on` snd) zrootYs)  -- Find the index of the best root
-root = rootXs !! index                              -- Best root x-value
-lb = lmax - root                                    -- Because this is the bigger root
-
----
-
-copMax = (t - dt) / dt                              -- Maximum COP based on Carnot cycle
+bestl = bestRoot acc (lmax/2, lmax) optHI           -- Best root x-value
+lb = lmax - bestl                                   -- Because this is the bigger root

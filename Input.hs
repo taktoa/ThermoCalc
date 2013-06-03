@@ -15,7 +15,6 @@ d2 = 44.58                              -- mm               -- Small tube diamet
 hr = 0.2925                             -- mm               -- Regenerator hydraulic radius
 st = 0.06                               -- mm               -- Proxy for blockage ratio
 ang = 9.0                               -- deg              -- Cone half-angle
-ltan = 0.75                             -- DL               -- FOR THE LOVE OF GOD REMOVE THIS
 
 -- Speaker Properties
 -- These values are for the speaker at: http://goo.gl/DwMs7

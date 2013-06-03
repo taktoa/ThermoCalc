@@ -1,6 +1,8 @@
 -- Collection of utility functions
 module Utility where
 
+import Data.Function (on)
+import Data.List (minimumBy)
 import Data.Decimal
 import Data.Word
 
@@ -27,3 +29,14 @@ show' x
     where
     a = show (realFracToDecimal (fromIntegral places :: Word8) x)
     al = length a
+
+acc = 0.01                                          -- Accuracy of the root-finder
+
+findR f (m,n) d = [x | x <- [m,(m+d)..n], f x < d]  -- Naive root finder function
+
+bestRoot a brckt f = xs !! index
+    where
+    xs = findR f brckt a
+    index = fst (minimumBy (compare `on` snd) zipped)
+    zipped = zip [0 .. length ys] ys
+    ys = map f xs
