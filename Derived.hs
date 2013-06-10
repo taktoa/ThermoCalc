@@ -89,3 +89,12 @@ optHI lb = abs (tempH lb - tempI lb)                -- Impedance-matching fitnes
 lmax = lt - ((2*lc) + lsph)                         -- Maximum possible length for lb
 bestl = bestRoot optHI (lmax/2, lmax) acc           -- Best root x-value
 lb = lmax - bestl                                   -- Because this is the bigger root
+
+---
+
+-- Thiele-Small adjustment
+--V, V', Va
+
+--int(0,lt,P(x,t),dx) = p
+--N/m^2
+--d/dt (P*V)

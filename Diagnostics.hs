@@ -64,6 +64,7 @@ diagChecks = do
     putStrLn (if checkVPD   then "VPD check passed."            else "VPD check failed!")
     putStrLn (if checkTD    then "TD check passed."             else "TD check failed!")
     putStrLn (if checkStack then "Stack check passed."          else "Stack check failed!")
+    putStrLn ("This should be between 2 and 4: " ++ show' (hr/dk) ++ "")
     putStrLn ""
 
 speakerPrint = do
