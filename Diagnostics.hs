@@ -4,6 +4,7 @@ import Input
 import Derived
 import Utility (show', places, acc)
 import Graphics.EasyPlot
+import Display (displayDiag)
 
 -- Checks
 small = 0.05
@@ -147,6 +148,7 @@ diagnostic = do
     conePrint
     capPrint
     diagChecks
+    displayDiag
 --    let options = [Title "COP vs X"]
 --    let options2D = [Range 0 1, Step acc]
 --    let func = Function2D options options2D (optX)

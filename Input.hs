@@ -9,7 +9,7 @@ t = 298.15                              -- K                -- Temperature
 dt = 10.0                               -- K                -- Temperature differential
 
 -- Input dimensions
-lt = 2000.0                             -- mm               -- Total resonator length
+lt = 1000.0                             -- mm               -- Total resonator length
 d1 = 83.41                              -- mm               -- Large tube diameter
 d2 = 44.58                              -- mm               -- Small tube diameter
 hr = 0.2925                             -- mm               -- Regenerator hydraulic radius
