@@ -1,11 +1,11 @@
-OUTPUT_EXEC = "ThermoCalc.bin"
+OUTPUT_EXEC = "bin/ThermoCalc.bin"
 
-all: ThermoCalc.hs
-	ghc -O3 -rtsopts --make ThermoCalc.hs -o $(OUTPUT_EXEC) && make clean && strip $(OUTPUT_EXEC)
+all: src/ThermoCalc.hs
+	cd src && ghc -O3 -rtsopts --make ThermoCalc.hs -o ../$(OUTPUT_EXEC) && cd .. && make clean && strip $(OUTPUT_EXEC)
 
 clean:
-	rm -f *.hi *.o
+	rm -f src/*.hi src/*.o
 
 clean-all:
-	rm -f $(OUTPUT_EXEC) *.hi *.o *.dat
+	rm -f $(OUTPUT_EXEC) src/*.hi src/*.o
 	    
