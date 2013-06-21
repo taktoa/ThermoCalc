@@ -7,14 +7,14 @@ import Graphics.EasyPlot
 import Display (displayDiag)
 
 -- Checks
-small = 0.05
+small = 0.25
 maxMach = 0.1
-checkMach = mach < maxMach                  -- At Mach numbers greater than 0.1, equations break down
-checkStack = lr < (small/k)                 -- The pressure across the stack should be constant along its length
-checkTPD = dk < 2*hr*small                  -- Stack spacing should be much bigger than dk
-checkVPD = dv < 2*hr*small                  -- Stack spacing should be much bigger than dv
-checkTD = dt < t*small                      -- Temp differential should be small compared to average temp
---checkStack = (hr > (2*dk)) && (hr < (4*dk)) -- To avoid acoustic effects, hr should be in this range
+checkMach = mach < maxMach                                  -- At Mach numbers greater than 0.1, equations break down
+checkStack = lr < (small/k)                                 -- The pressure across the stack should be constant along its length
+checkTPD = dk < 2*hr*small                                  -- Stack spacing should be much bigger than dk
+checkVPD = dv < 2*hr*small                                  -- Stack spacing should be much bigger than dv
+checkTD = dt < t*small                                      -- Temp differential should be small compared to average temp
+--checkStack = (hr > (2*dk)) && (hr < (4*dk))               -- To avoid acoustic effects, hr should be in this range
 
 -------------------------------------------------------------------
 
@@ -148,10 +148,9 @@ diagnostic = do
     conePrint
     capPrint
     diagChecks
-    displayDiag
+--    displayDiag
 --    let options = [Title "COP vs X"]
 --    let options2D = [Range 0 1, Step acc]
 --    let func = Function2D options options2D (optX)
 --    plot' [Interactive] X11 func
---    putStrLn ("xn: " ++ show' xn)
---    putStrLn "Done."
+

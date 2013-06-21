@@ -9,11 +9,14 @@ t = 298.15                              -- K                -- Temperature
 dt = 10.0                               -- K                -- Temperature differential
 
 -- Input dimensions
-lt = 1000.0                             -- mm               -- Total resonator length
-d1 = 83.41                              -- mm               -- Large tube diameter
-d2 = 44.58                              -- mm               -- Small tube diameter
+lt = 750.0                              -- mm               -- Total resonator length
+d1 = 77.92                              -- mm               -- Large tube diameter
+d2 = 40.894                             -- mm               -- Small tube diameter
+fl = 10.0                               -- mm               -- Flange thickness
 hr = 0.2925                             -- mm               -- Regenerator hydraulic radius
-st = 0.06                               -- mm               -- Proxy for blockage ratio
+--hr = 0.015                              -- mm               -- Regenerator hydraulic radius
+br = 0.83                               -- DL               -- Blockage ratio
+--br = 0.75                               -- DL               -- Blockage ratio
 ang = 9.0                               -- deg              -- Cone half-angle
 
 -- Speaker Properties
@@ -54,5 +57,5 @@ gam = cp/cv                             -- DL               -- Specific heat rat
 sos = 1000.0 * (480.589 + (1.7875 * t)) -- mm/s             -- Speed of sound
 kg = ((2.38889 `e` (-4)) * t) ** 0.710  -- W/(m*K)          -- Thermal conductivity
 mu = ((7.96389 `e` (-6)) * t) ** 0.647  -- cP               -- Viscosity
-rho = ((47.90903 * p) + 0.1472) / t     -- g/mL             -- Density
+rho = ((47.91 * p) + 0.1472) / (1000*t) -- g/mL             -- Density
 pr = (mu*cp)/kg                         -- DL               -- Prandtl number
