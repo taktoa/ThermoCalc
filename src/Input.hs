@@ -4,19 +4,21 @@ module Input where
 import Utility (e)
 
 -- Input variables
-p = 10.0                                -- bar              -- Pressure
+p = 1.0                                 -- bar              -- Pressure
 t = 298.15                              -- K                -- Temperature
-dt = 10.0                               -- K                -- Temperature differential
+dt = 30.0                               -- K                -- Temperature differential
 
 -- Input dimensions
 lt = 750.0                              -- mm               -- Total resonator length
-d1 = 77.92                              -- mm               -- Large tube diameter
-d2 = 40.894                             -- mm               -- Small tube diameter
-fl = 10.0                               -- mm               -- Flange thickness
+--- Values are for Schedule 40, NPS size 3 and NPS size 1.5 pipe
+d1 = 77.92                              -- mm               -- Large tube inside diameter
+d2 = 40.894                             -- mm               -- Small tube inside diameter
+--- Set to 0 for idealized construction
+fl = 0.0                                -- mm               -- Flange thickness
+--- Values are for thin-wall 400 c/in^2 Celcor
 hr = 0.2925                             -- mm               -- Regenerator hydraulic radius
---hr = 0.015                              -- mm               -- Regenerator hydraulic radius
 br = 0.83                               -- DL               -- Blockage ratio
---br = 0.75                               -- DL               -- Blockage ratio
+--- Shouldn't need to be changed, generally
 ang = 9.0                               -- deg              -- Cone half-angle
 
 -- Speaker Properties
@@ -58,4 +60,3 @@ sos = 1000.0 * (480.589 + (1.7875 * t)) -- mm/s             -- Speed of sound
 kg = ((2.38889 `e` (-4)) * t) ** 0.710  -- W/(m*K)          -- Thermal conductivity
 mu = ((7.96389 `e` (-6)) * t) ** 0.647  -- cP               -- Viscosity
 rho = ((47.91 * p) + 0.1472) / (1000*t) -- g/mL             -- Density
-pr = (mu*cp)/kg                         -- DL               -- Prandtl number

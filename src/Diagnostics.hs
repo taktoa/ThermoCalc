@@ -8,8 +8,8 @@ import Display (displayDiag)
 
 -- Checks
 small = 0.25
-maxMach = 0.1
-checkMach = mach < maxMach                                  -- At Mach numbers greater than 0.1, equations break down
+maxMach = 0.1                                               -- Maximum mach number. Should not be changed, generally.
+checkMach = mach < maxMach                                  -- At Mach numbers greater than maximum Mach number, equations break down.
 checkStack = lr < (small/k)                                 -- The pressure across the stack should be constant along its length
 checkTPD = dk < 2*hr*small                                  -- Stack spacing should be much bigger than dk
 checkVPD = dv < 2*hr*small                                  -- Stack spacing should be much bigger than dv

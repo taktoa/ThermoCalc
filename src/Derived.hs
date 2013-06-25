@@ -37,6 +37,7 @@ vtotali = vresti + (2*vc) + vsph + vb   -- mm^3             -- Total resonator v
 vtotalf = vrestf + (2*vc) + vsph + vb   -- mm^3             -- Total resonator volume at MSPD
 
 -- Derived values
+pr = (mu*cp)/kg                         -- DL               -- Prandtl number
 mach = (100000000*dp)/(rho*(sos**2))    -- Mach             -- Mach number of resonator flow
 f = sos / wl                            -- hertz            -- Frequency
 omg = 2*pi*f                            -- rad/s            -- Rotational frequency
@@ -79,7 +80,7 @@ fCOP x
     a = cop x ((4*pi*lrest/wl) - (2 * x))
 
 optX x = (copMax - fCOP x) / copMax
-dist = 0.15
+dist = 0.05
 xn = bestRoot optX (dist, 1 - dist) acc                     -- Best root x-value
 copAct = fCOP xn                                            -- Actual COP
 
@@ -99,4 +100,7 @@ lb = lmax - bestl                                           -- Because this is t
 --N/m^2
 --d/dt (P*V)
 
-
+-- xc = peak excursion
+-- sd = cone area
+-- vb = enclosure volume
+-- penc = -xc * sd * (rho * c^2) / vb

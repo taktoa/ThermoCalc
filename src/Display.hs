@@ -4,21 +4,24 @@ module Display where
 import Input
 import Derived
 import Utility (show')
-import Diagrams.Prelude hiding (lc)
+import Diagrams.Prelude hiding (lc, tan)
 import Diagrams.Backend.Cairo.CmdLine (defaultMain)
 
-cs = sqrt(((d2 - d1)/2)^2 + lc^2)
-ang1 = Deg (90.0 + ang)
-ang2 = Deg (90.0 - ang)
-cone = polygon with { polyType = PolySides [ang1, ang1, ang2, ang2] [cs, d1, cs, d2] } # rotate (-90::Deg) # centerXY
+cone a m n = polygon with {
+                polyType = PolySides [a1, a1, a2, a2] [cs, m, cs, n] } # rotate (-90::Deg) # centerXY
+        where
+        a1 = Deg (90.0 + a)
+        a2 = Deg (90.0 - a)
+        cs = sqrt(((n - m)/2)^2 + l^2)
+        l = (m - n) / (2.0 * tan (pi*a/180))
 
 inittubeDiag = rect lta d1                                  -- Initial tube
 hothexDiag = rect (2*lhex) d1                               -- Hot heat exchanger
 stackDiag = rect lr d1                                      -- Stack
 coldhexDiag = rect lhex d1                                  -- Cold heat exchanger
-downconeDiag = cone # rotate (180::Deg)                     -- Downcone
+downconeDiag = cone ang d1 d2 # rotate (180::Deg)           -- Downcone
 thintubeDiag = rect lb d2                                   -- Thin tube
-upconeDiag = cone                                           -- Upcone
+upconeDiag = cone ang d1 d2                                 -- Upcone
 capDiag = wedge (d1/2) (270::Deg) (90::Deg)                 -- Cap
 
 inittubeText = text (show' lta ++ " mm") # fontSize 8
