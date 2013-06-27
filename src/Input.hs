@@ -24,13 +24,13 @@ ang = 9.0                               -- deg              -- Cone half-angle
 -- Speaker Properties
 -- These values are for the speaker at: http://goo.gl/DwMs7
 -- Feel free to substitute your own Thiele-Small parameters
-spPrms = 25.0                           -- W                -- RMS power handling
-spPmax = 50.0                           -- W                -- Maximum power input
-spfmin = 80.0                           -- Hz               -- Minimum frequency
-spfmax = 6000.0                         -- Hz               -- Maximum frequency
-spfres = 77.0                           -- Hz               -- Resonant frequency
-sps = 86.0                              -- dB 1W / 1m       -- Speaker sensitivity
-sprdc = 5.6                             -- ohm              -- DC coil resistance
+spPrms = 50.0                           -- W                -- RMS power handling
+spPmax = 100.0                          -- W                -- Maximum power input
+spfmin = 90.0                           -- Hz               -- Minimum frequency
+spfmax = 3000.0                         -- Hz               -- Maximum frequency
+spfres = 83.0                           -- Hz               -- Resonant frequency
+sps = 89.0                              -- dB 1W / 1m       -- Speaker sensitivity
+sprdc = 4.49                            -- ohm              -- DC coil resistance
 spinduc = 0.60                          -- mH               -- Coil inductance
 spqms = 2.43                            -- DL               -- Mechanical Q
 spqes = 0.90                            -- DL               -- Electrical Q
@@ -49,14 +49,25 @@ spdtotal = 146.0                        -- mm               -- Total speaker dia
 -------------------------------------------------------------------------------------
 
 -- Constants
--- These are for helium, and are temperature- and pressure-invariant
-cp = 5.193                              -- J/(g*K)          -- Constant-pressure specific heat
-cv = 3.116                              -- J/(g*K)          -- Constant-volume specific heat
+-- These are for air
+cp = 1.040                              -- J/(g*K)          -- Constant-pressure specific heat
+cv = 0.743                              -- J/(g*K)          -- Constant-volume specific heat
 gam = cp/cv                             -- DL               -- Specific heat ratio
 
--- Regressions
 -- These are for helium
-sos = 1000.0 * (480.589 + (1.7875 * t)) -- mm/s             -- Speed of sound
-kg = ((2.38889 `e` (-4)) * t) ** 0.710  -- W/(m*K)          -- Thermal conductivity
-mu = ((7.96389 `e` (-6)) * t) ** 0.647  -- cP               -- Viscosity
-rho = ((47.91 * p) + 0.1472) / (1000*t) -- g/mL             -- Density
+--cp = 5.193                              -- J/(g*K)          -- Constant-pressure specific heat
+--cv = 3.116                              -- J/(g*K)          -- Constant-volume specific heat
+--gam = cp/cv                             -- DL               -- Specific heat ratio
+
+-- Regressions
+-- These are for air
+sos = 1000.0 * (186.77 + (0.55 * t))    -- mm/s             -- Speed of sound
+kg = ((2.9929 `e` (-5)) * t) ** 0.775   -- W/(m*K)          -- Thermal conductivity
+mu = ((1.8417 `e` (-5)) * t) ** 0.775   -- cP               -- Viscosity
+rho = (1.242 * p) / ((3.61 * t) + 8.86) -- g/mL             -- Density
+
+-- These are for helium
+--sos = 1000.0 * (480.589 + (1.7875 * t)) -- mm/s             -- Speed of sound
+--kg = ((2.38889 `e` (-4)) * t) ** 0.710  -- W/(m*K)          -- Thermal conductivity
+--mu = ((7.96389 `e` (-6)) * t) ** 0.647  -- cP               -- Viscosity
+--rho = (0.4791 * p) / (1000 * t)         -- g/mL             -- Density
