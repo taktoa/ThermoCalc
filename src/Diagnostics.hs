@@ -10,11 +10,13 @@ import Display (displayDiag)
 small = 0.25
 maxMach = 0.1                                               -- Maximum mach number. Should not be changed, generally.
 checkMach = mach < maxMach                                  -- At Mach numbers greater than maximum Mach number, equations break down.
-checkStack = lr < (small/k)                                 -- The pressure across the stack should be constant along its length
-checkTPD = dk < 2*hr*small                                  -- Stack spacing should be much bigger than dk
-checkVPD = dv < 2*hr*small                                  -- Stack spacing should be much bigger than dv
-checkTD = dt < t*small                                      -- Temp differential should be small compared to average temp
+checkStack = lr*k < small                                   -- The pressure across the stack should be constant along its length
+checkTPD = dkn/2 < small                                    -- Stack spacing should be much bigger than dk
+checkVPD = dvn/2 < small                                    -- Stack spacing should be much bigger than dv
+checkTD = dtn < small                                       -- Temp differential should be small compared to average temp
 checkRatio = (hr > (2*dk)) && (hr < (4*dk))                 -- To avoid acoustic effects, hr should be in this range
+checkSpkr = (f > spfmin) && (f < spfmax)                    -- Frequency must be within speaker's range
+
 
 -------------------------------------------------------------------
 
@@ -60,12 +62,13 @@ syspropPrint = do
 diagChecks = do
     putStrLn "-------------------"
     putStrLn "DIAGNOSTICS:"
-    putStrLn (if checkMach  then "Mach number check passed."    else "Mach number too high!")
-    putStrLn (if checkTPD   then "TPD check passed."            else "TPD check failed!")
-    putStrLn (if checkVPD   then "VPD check passed."            else "VPD check failed!")
-    putStrLn (if checkTD    then "TD check passed."             else "TD check failed!")
-    putStrLn (if checkStack then "Stack check passed."          else "Stack check failed!")
-    putStrLn (if checkRatio then "Ratio check passed."          else "Ratio check failed!")
+    putStrLn (if checkMach  then "Mach number check passed."    else "Mach number too high! "   ++ show' mach)
+    putStrLn (if checkTPD   then "TPD check passed."            else "TPD check failed! "       ++ show' (dkn/2))
+    putStrLn (if checkVPD   then "VPD check passed."            else "VPD check failed! "       ++ show' (dvn/2))
+    putStrLn (if checkTD    then "TD check passed."             else "TD check failed! "        ++ show' dtn)
+    putStrLn (if checkStack then "Stack check passed."          else "Stack check failed! "     ++ show' (lr*k))
+    putStrLn (if checkRatio then "Ratio check passed."          else "Ratio check failed! "     ++ show' (hr/dk))
+    putStrLn (if checkSpkr  then "Speaker check passed."        else "Speaker check failed! "   ++ show' (f))
     putStrLn ""
 
 speakerPrint = do
@@ -75,6 +78,13 @@ speakerPrint = do
     putStrLn ("Diameter (screw):    " ++ show' spdscrew ++ " mm")
     putStrLn ("Diameter (total):    " ++ show' spdtotal ++ " mm")
     putStrLn ("Length:              " ++ show' splen    ++ " mm")
+    putStrLn ("P. surface area:     " ++ show' spsd     ++ " mm^2")
+    putStrLn ("Force factor (Bl):   " ++ show' spbl     ++ " T*m")
+    putStrLn ("Spring constant:     " ++ show' spkc     ++ " N/m")
+    putStrLn ("Moving mass:         " ++ show' spmms    ++ " kg")
+    putStrLn ("Mech. resistance:    " ++ show' sprms    ++ " N*s/m")
+    putStrLn ("Elec. resistance:    " ++ show' sprdc    ++ " ohm")
+    putStrLn ("Coil inductance:     " ++ show' spinduc  ++ " H")
     putStrLn ""
 
 bigTubePrint = do
@@ -91,7 +101,7 @@ heatExchangerPrint = do
     putStrLn "HEX PROPERTIES:"
     putStrLn ("Diameter:            " ++ show' d1       ++ " mm")
     putStrLn ("Length:              " ++ show' lhex     ++ " mm")
-    putStrLn ("Blockage ratio:      " ++ show' br       ++ " mm")
+    putStrLn ("Blockage ratio:      " ++ show' br       ++ "")
     putStrLn ("Cross-section area:  " ++ show' xa1      ++ " mm^2")
     putStrLn ("Volume:              " ++ show' vhex     ++ " mm^3")
     putStrLn ""
@@ -141,6 +151,7 @@ diagnostic = do
     enviroPrint
     gaspropPrint
     syspropPrint
+    speakerPrint
     bigTubePrint
     heatExchangerPrint
     regenPrint
