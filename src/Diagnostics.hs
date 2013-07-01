@@ -15,8 +15,8 @@ checkTPD = dkn/2 < small                                    -- Stack spacing sho
 checkVPD = dvn/2 < small                                    -- Stack spacing should be much bigger than dv
 checkTD = dtn < small                                       -- Temp differential should be small compared to average temp
 checkRatio = (hr > (2*dk)) && (hr < (4*dk))                 -- To avoid acoustic effects, hr should be in this range
-checkSpkr = (f > spfmin) && (f < spfmax)                    -- Frequency must be within speaker's range
-
+checkSpkrF = (f > spfmin) && (f < spfmax)                   -- Frequency must be within speaker's range
+checkSpkrD = spdtotal < d0                                  -- Frequency must be within speaker's range
 
 -------------------------------------------------------------------
 
@@ -62,14 +62,25 @@ syspropPrint = do
 diagChecks = do
     putStrLn "-------------------"
     putStrLn "DIAGNOSTICS:"
-    putStrLn (if checkMach  then "Mach number check passed."    else "Mach number too high! "   ++ show' mach)
-    putStrLn (if checkTPD   then "TPD check passed."            else "TPD check failed! "       ++ show' (dkn/2))
-    putStrLn (if checkVPD   then "VPD check passed."            else "VPD check failed! "       ++ show' (dvn/2))
-    putStrLn (if checkTD    then "TD check passed."             else "TD check failed! "        ++ show' dtn)
-    putStrLn (if checkStack then "Stack check passed."          else "Stack check failed! "     ++ show' (lr*k))
-    putStrLn (if checkRatio then "Ratio check passed."          else "Ratio check failed! "     ++ show' (hr/dk))
-    putStrLn (if checkSpkr  then "Speaker check passed."        else "Speaker check failed! "   ++ show' (f))
+    putStrLn (if checkMach  then "Mach number check passed."    else "Mach number too high! "      ++ show' mach     ++ " > " ++ show' maxMach)
+    putStrLn (if checkTPD   then "TPD check passed."            else "TPD check failed! "          ++ show' (dkn/2)  ++ " > " ++ show' small)
+    putStrLn (if checkVPD   then "VPD check passed."            else "VPD check failed! "          ++ show' (dvn/2)  ++ " > " ++ show' small)
+    putStrLn (if checkTD    then "TD check passed."             else "TD check failed! "           ++ show' dtn      ++ " > " ++ show' small)
+    putStrLn (if checkStack then "Stack check passed."          else "Stack check failed! "        ++ show' (lr*k)   ++ " > " ++ show' small)
+    putStrLn (if checkRatio then "Ratio check passed."          else "Ratio check failed! "        ++ show' (hr/dk)  ++ " | " ++ show' 2.0000 ++ ", " ++ show' 4.0000)
+    putStrLn (if checkSpkrF then "Speaker freq check passed."   else "Speaker freq check failed! " ++ show' f        ++ " | " ++ show' spfmin ++ ", " ++ show' spfmax)
+    putStrLn (if checkSpkrD then "Speaker diam check passed."   else "Speaker diam check failed! " ++ show' spdtotal ++ " > " ++ show' d0)
     putStrLn ""
+
+cabinetPrint = do
+    putStrLn "-------------------"
+    putStrLn "CABINET PROPERTIES:"
+    putStrLn ("Diameter:            " ++ show' d0       ++ " mm")
+    putStrLn ("Length:              " ++ show' lbox     ++ " mm")
+    putStrLn ("Cross-section area:  " ++ show' xa0      ++ " mm^2")
+    putStrLn ("Volume:              " ++ show' vbox     ++ " mm^3")
+    putStrLn ""
+
 
 speakerPrint = do
     putStrLn "-------------------"
@@ -151,6 +162,7 @@ diagnostic = do
     enviroPrint
     gaspropPrint
     syspropPrint
+    cabinetPrint
     speakerPrint
     bigTubePrint
     heatExchangerPrint

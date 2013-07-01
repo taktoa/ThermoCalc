@@ -7,11 +7,11 @@ import Utility (sin2, cos2, cot, bestRoot, acc)
 -- Derived dimensions
 lr = (2*lrest) - ((wl * xn) / pi)
 lta = lrest - lr
-
 st = (1  - br) * (hr/br)                -- mm               -- Stack "thickness"
 dr = d1/d2                              -- DL               -- Diameter ratio
-r1 = d1/2                               -- mm               -- Radius 1
-r2 = d2/2                               -- mm               -- Radius 2
+r0 = d0/2                               -- mm               -- Radius of speaker tube
+r1 = d1/2                               -- mm               -- Radius of initial tube
+r2 = d2/2                               -- mm               -- Radius of smaller tube
 lsph = (d1/2) + fl                      -- mm               -- Semispherical endcap length
 u = 100000000.0*dp/(rho*sos)            -- mm/s             -- Temporary variable
 lhex = (u/omg) * sin(k*lrest)           -- mm               -- Heat exchanger length
@@ -19,6 +19,7 @@ angRad = ang * (pi/180.0)               -- rad              -- Cone half-angle
 uc = (d1 - d2) / (2.0 * tan angRad)     -- mm               -- Unadjusted cone length
 lc = uc + (2*fl)                        -- mm               -- Cone length, adjusting for flanges
 wl = 4.0 * lt                           -- mm               -- Wavelength
+xa0 = pi * (r0 ** 2.0)                  -- mm^2             -- Speaker cabinet cross-sectional area
 xa1 = pi * (r1 ** 2.0)                  -- mm^2             -- Cross-sectional area 1
 xa2 = pi * (r2 ** 2.0)                  -- mm^2             -- Cross-sectional area 2
 xa3 = pi * ((spdsmall / 2.0) ** 2.0)    -- mm^2             -- Cross-sectional area of speaker
@@ -67,6 +68,9 @@ spmms = (spbl**2) * a                   -- kg               -- Speaker moving ma
     where a = spqes / (spomgres * sprdc)
 sprms = spomgres * spmms / spqms        -- N*s/m            -- Speaker mechanical resistance
 spkc = 1 / spcms                        -- N/m              -- Speaker spring constant
+spalpha = ((f/spfres)**2) - 1           -- DL               -- Speaker cabinet alpha
+vbox = spvas / spalpha                  -- mm^3             -- Speaker cabinet volume
+lbox = vbox/xa0                         -- mm               -- Speaker cabinet length
 
 -- Constraints
 --- Temporary variables to make the equation easier
