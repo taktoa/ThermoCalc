@@ -3,7 +3,7 @@ module Display where
 
 import Input
 import Derived
-import Utility (show')
+import Utility (show_)
 import Diagrams.Prelude hiding (lc, tan)
 import Diagrams.Backend.Cairo.CmdLine (defaultMain)
 
@@ -21,7 +21,7 @@ cone' l m n = (cone a m n) # rotate (Deg (a - 90.0))
     where
     a = 180 * atan ((m - n) / (2.0 * l))/pi
 
-speakerDiag = (rect (splen/2) d1 ||| cone' (splen/2) spdtotal d1) # translateX dist
+speakerDiag = (rect (splen/2) d1 ||| cone' (splen/2) spdsmall d1) # translateX dist
     where
     dist = (lbox - 1.5*splen)/2
 cabitubeDiag = rect lbox d0 <> speakerDiag                  -- Cabinet tube
@@ -34,13 +34,15 @@ thintubeDiag = rect lb d2                                   -- Thin tube
 upconeDiag = cone ang d1 d2                                 -- Upcone
 capDiag = wedge (d1/2) (270::Deg) (90::Deg)                 -- Cap
 
+dig = 5
+
 cabitubeText = text ""
-inittubeText = text (show' lta ++ " mm") # fontSize 8
+inittubeText = text (show_ dig lta ++ " mm") # fontSize 8
 hothexText = text ""
-stackText = text (show' lr ++ " mm") # fontSize 8
+stackText = text (show_ dig lr ++ " mm") # fontSize 8
 coldhexText = text ""
 downconeText = text ""
-thintubeText = text (show' lb ++ " mm") # fontSize 8
+thintubeText = text (show_ dig lb ++ " mm") # fontSize 8
 upconeText = text ""
 capText = text ""
 

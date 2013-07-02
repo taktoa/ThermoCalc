@@ -21,14 +21,16 @@ cot2 x = cot x ** 2.0
 places :: Int                                               -- Max number of decimal places in a printed number
 places = 8
 
-show' :: Double -> String                                   -- Prints fixed-length numbers
-show' x
-    | al < places       = a ++ replicate (places - al) '0'
-    | al > places       = take places a
-    | al == places      = a
+show_ :: Int -> Double -> String                            -- Prints fixed-length numbers
+show_ p x
+    | al < p            = a ++ replicate (places - al) '0'
+    | al > p            = take places a
+    | al == p           = a
     where
-    a = show (realFracToDecimal (fromIntegral places :: Word8) x)
+    a = show (realFracToDecimal (fromIntegral p :: Word8) x)
     al = length a
+    
+show' = show_ places
 
 acc = 0.01                                                  -- Accuracy of the root-finder
 
