@@ -18,6 +18,8 @@ csc2 x = csc x ** 2.0
 sec2 x = sec x ** 2.0
 cot2 x = cot x ** 2.0
 
+log10 = logBase 10
+
 places :: Int                                               -- Max number of decimal places in a printed number
 places = 8
 
