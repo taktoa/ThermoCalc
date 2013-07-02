@@ -14,8 +14,17 @@ cone a m n = polygon with {
         a2 = Deg (90.0 - a)
         cs = sqrt(((n - m)/2)^2 + l^2)
         l = (m - n) / (2.0 * tan (pi*a/180))
+        
+        
 
-cabitubeDiag = rect lbox d0                                 -- Cabinet tube
+cone' l m n = (cone a m n) # rotate (Deg (a - 90.0))
+    where
+    a = 180 * atan ((m - n) / (2.0 * l))/pi
+
+speakerDiag = (rect (splen/2) d1 ||| cone' (splen/2) spdtotal d1) # translateX dist
+    where
+    dist = (lbox - 1.5*splen)/2
+cabitubeDiag = rect lbox d0 <> speakerDiag                  -- Cabinet tube
 inittubeDiag = rect lta d1                                  -- Initial tube
 hothexDiag = rect (2*lhex) d1                               -- Hot heat exchanger
 stackDiag = rect lr d1                                      -- Stack

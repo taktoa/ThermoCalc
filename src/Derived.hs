@@ -32,7 +32,7 @@ vr = xa1*lr                             -- mm^3             -- Regenerator volum
 vra = xa1*lr*(1-br)                     -- mm^3             -- Regenerator volume (gas)
 lrest = lt - ((2*lc)+lb+lsph)           -- mm               -- Length of the rest of the resonator
 vrest = xa1*lrest                       -- mm^3             -- Volume thereof
-dvrest = xa3*spxmax                     -- mm^3             -- Change in volume as the speaker cycles
+dvrest = spsd*spxmax                    -- mm^3             -- Change in volume as the speaker cycles
 vresti = vrest+dvrest                   -- mm^3             -- Volume at maximum negative speaker displacement (MNSD)
 vrestf = vrest-dvrest                   -- mm^3             -- Volume at maximum positive speaker displacement (MPSD)
 vtotal = vrest + (2*vc) + vsph + vb     -- mm^3             -- Total resonator volume
@@ -69,7 +69,10 @@ spmms = (spbl**2) * a                   -- kg               -- Speaker moving ma
 sprms = spomgres * spmms / spqms        -- N*s/m            -- Speaker mechanical resistance
 spkc = 1 / spcms                        -- N/m              -- Speaker spring constant
 spalpha = ((f/spfres)**2) - 1           -- DL               -- Speaker cabinet alpha
-vbox = spvas / spalpha                  -- mm^3             -- Speaker cabinet volume
+vmagnet = pi*splen*(spdtotal**2.0)/32   -- mm^3             -- Rough approximation of speaker magnet volume
+vscone = 7*pi*splen*(spdtotal**2.0)/96  -- mm^3             -- Rough approximation of speaker cone volume
+vspeaker = (vmagnet+vscone)             -- mm^3             -- Rough approximation of speaker volume
+vbox = (spvas / spalpha) + vspeaker     -- mm^3             -- Speaker cabinet volume
 lbox = vbox/xa0                         -- mm               -- Speaker cabinet length
 
 -- Constraints
@@ -114,15 +117,3 @@ optHI lb = abs (tempH lb - tempI lb)                        -- Impedance-matchin
 lmax = lt - ((2*lc) + lsph)                                 -- Maximum possible length for lb
 bestl = bestRoot optHI (lmax/2, lmax) acc                   -- Best root x-value
 lb = lmax - bestl                                           -- Because this is the bigger root
-
----
--- Thiele-Small adjustment
---V, V', Va
---int(0,lt,P(x,t),dx) = p
---N/m^2
---d/dt (P*V)
-
--- xc = peak excursion
--- sd = cone area
--- vb = enclosure volume
--- penc = -xc * sd * (rho * c^2) / vb

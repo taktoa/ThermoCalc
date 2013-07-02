@@ -157,7 +157,6 @@ capPrint = do
     putStrLn ("Volume:              " ++ show' vsph     ++ " mm^3")
     putStrLn ""
 
-
 diagnostic = do
     enviroPrint
     gaspropPrint
