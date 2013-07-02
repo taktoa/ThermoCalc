@@ -38,7 +38,7 @@ dig = 5
 
 cabitubeText = text ""
 inittubeText = text (show_ dig lta ++ " mm") # fontSize 8
-hothexText = text ""
+hothexText = text "Testing" # translateY 30
 stackText = text (show_ dig lr ++ " mm") # fontSize 8
 coldhexText = text ""
 downconeText = text ""
