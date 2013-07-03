@@ -6,6 +6,7 @@ import Data.List (minimumBy)
 import Data.Decimal
 import Data.Word
 
+a // b = (fromIntegral a) / (fromIntegral b)
 e a b = a * (10.0 ** b)                                     -- "e" function; i.e.: 1.3e6 = 1.3 * (10^6) = 1300000
 
 sin2 x = sin x ** 2.0                                       -- Trigonometric utility functions
@@ -20,6 +21,9 @@ cot2 x = cot x ** 2.0
 
 places :: Int                                               -- Max number of decimal places in a printed number
 places = 8
+
+round_ :: Int -> Double -> Double
+round_ p x = round (x * (10^p)) // (10^p)
 
 show_ :: Int -> Double -> String                            -- Prints fixed-length numbers
 show_ p x

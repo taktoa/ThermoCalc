@@ -3,12 +3,14 @@ module Display where
 
 import Input
 import Derived
-import Utility (show_)
+import Utility
 import Diagrams.Prelude hiding (lc, tan)
+import Diagrams.Segment
 import Diagrams.Backend.Cairo.CmdLine (defaultMain)
 
 cone a m n = polygon with {
-                polyType = PolySides [a1, a1, a2, a2] [cs, m, cs, n] } # rotate (-90::Deg) # centerXY
+                polyType = PolySides [a1, a1, a2, a2] [cs, m, cs, n] } 
+                # rotate (-90::Deg) # centerXY
         where
         a1 = Deg (90.0 + a)
         a2 = Deg (90.0 - a)
@@ -17,7 +19,7 @@ cone a m n = polygon with {
         
         
 
-cone' l m n = (cone a m n) # rotate (Deg (a - 90.0))
+cone' l m n = cone a m n # rotate (Deg (a - 90.0))
     where
     a = 180 * atan ((m - n) / (2.0 * l))/pi
 
@@ -34,15 +36,23 @@ thintubeDiag = rect lb d2                                   -- Thin tube
 upconeDiag = cone ang d1 d2                                 -- Upcone
 capDiag = wedge (d1/2) (270::Deg) (90::Deg)                 -- Cap
 
-dig = 5
+pl = 1
 
-cabitubeText = text ""
-inittubeText = text (show_ dig lta ++ " mm") # fontSize 8
-hothexText = text "Testing" # translateY 30
-stackText = text (show_ dig lr ++ " mm") # fontSize 8
-coldhexText = text ""
+dispText num unit size = text (show_ pl (round_ pl num) ++ unit) # fontSize size
+
+--labelline = straight a b
+    --where
+    --a = location (thintubeDiag # alignL)
+    --b = location thintubeText
+    --c = location (thintubeDiag # alignR)
+
+cabitubeText = dispText lbox " mm" 8 # translateY (d1*0.75)
+inittubeText = dispText lta " mm" 8
+hothexText = dispText lhh " mm" 8 # translateY (d1*0.75)
+stackText = dispText lr " mm" 8
+coldhexText = dispText lhc " mm" 8 # translateY (d1*0.75)
 downconeText = text ""
-thintubeText = text (show_ dig lb ++ " mm") # fontSize 8
+thintubeText = dispText lb " mm" 8
 upconeText = text ""
 capText = text ""
 
@@ -56,6 +66,6 @@ thintube = thintubeText <> thintubeDiag
 upcone = upconeText <> upconeDiag
 cap = capText <> capDiag
 
-diag = cabitube ||| inittube ||| hothex ||| stack ||| coldhex ||| downcone ||| thintube ||| upcone ||| cap
+diag = hcat [cabitube, inittube, hothex, stack, coldhex, downcone, thintube, upcone, cap]
 
 displayDiag = defaultMain (diag # scale (1/d1))

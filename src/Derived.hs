@@ -15,6 +15,8 @@ r2 = d2/2                               -- mm               -- Radius of smaller
 lsph = (d1/2) + fl                      -- mm               -- Semispherical endcap length
 u = 100000000.0*dp/(rho*sos)            -- mm/s             -- Temporary variable
 lhex = (u/omg) * sin(k*lrest)           -- mm               -- Heat exchanger length
+lhc = lhex                              -- mm               -- Cold heat exchanger length
+lhh = lhex*2                            -- mm               -- Hot heat exchanger length
 angRad = ang * (pi/180.0)               -- rad              -- Cone half-angle
 uc = (d1 - d2) / (2.0 * tan angRad)     -- mm               -- Unadjusted cone length
 lc = uc + (2*fl)                        -- mm               -- Cone length, adjusting for flanges
@@ -71,7 +73,7 @@ spkc = 1 / spcms                        -- N/m              -- Speaker spring co
 spalpha = ((f/spfres)**2) - 1           -- DL               -- Speaker cabinet alpha
 vmagnet = pi*splen*(spdtotal**2.0)/32   -- mm^3             -- Rough approximation of speaker magnet volume
 vscone = 7*pi*splen*(spdtotal**2.0)/96  -- mm^3             -- Rough approximation of speaker cone volume
-vspeaker = (vmagnet+vscone)             -- mm^3             -- Rough approximation of speaker volume
+vspeaker = vmagnet + vscone             -- mm^3             -- Rough approximation of speaker volume
 vbox = (spvas / spalpha) + vspeaker     -- mm^3             -- Speaker cabinet volume
 lbox = vbox/xa0                         -- mm               -- Speaker cabinet length
 
