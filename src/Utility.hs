@@ -19,6 +19,15 @@ csc2 x = csc x ** 2.0
 sec2 x = sec x ** 2.0
 cot2 x = cot x ** 2.0
 
+fst3 (a, _, _) = a
+snd3 (_, b, _) = b
+thd3 (_, _, c) = c
+
+fst4 (a, _, _, _) = a
+snd4 (_, b, _, _) = b
+thd4 (_, _, c, _) = c
+lst4 (_, _, _, d) = d
+
 log10 = logBase 10
 
 places :: Int                                               -- Max number of decimal places in a printed number
@@ -48,3 +57,15 @@ bestRoot f brckt d = xs !! index
     index = fst (minimumBy (compare `on` snd) zipped)
     zipped = zip [0 .. length ys] ys
     ys = map f xs
+
+applyError f x inerr = (x, lower, y, upper)
+    where
+    y = f x
+    a = f (x * (1 + inerr))
+    b = f (x * (1 - inerr))
+    upper = if a > b then a else b
+    lower = if a > b then b else a
+    
+rootError f brckt d inerr = applyError f root inerr
+    where
+    root = bestRoot f brckt d

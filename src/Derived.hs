@@ -5,26 +5,38 @@ import Input
 import Utility (sin2, cos2, cot, log10, bestRoot, acc)
 
 -- Derived dimensions
-lr = (2*lrest) - ((wl * xn) / pi)
-lta = lrest - lr
 st = (1  - br) * (hr/br)                -- mm               -- Stack "thickness"
+
+spvas = sprvas * (p / p_air)            -- mm^3             -- Speaker compliance volume in the working fluid
+spfres = sprfres * (sos / sos_air)      -- Hz               -- Speaker resonant frequency in the working fluid
+spfmax = sprfmax * (sos / sos_air)      -- Hz               -- Speaker maximum frequency in the working fluid      
+spfmin = sprfmin * (sos / sos_air)      -- Hz               -- Speaker minimum frequency in the working fluid
+
+lr = (2*lrest) - ((wl * xn) / pi)       -- mm               -- Regenerator length
+lta = lrest - lr                        -- mm               -- Length of the initial tube
+
+cAngRad = cang * (pi/180.0)             -- rad              -- Cone half-angle
+lc = (d1 - d2) / (2.0 * tan cAngRad)    -- mm               -- Cone length
+
 dr = d1/d2                              -- DL               -- Diameter ratio
+
 r0 = d0/2                               -- mm               -- Radius of speaker tube
 r1 = d1/2                               -- mm               -- Radius of initial tube
 r2 = d2/2                               -- mm               -- Radius of smaller tube
-lsph = (d1/2) + fl                      -- mm               -- Semispherical endcap length
+
+lsph = (d1/2)                           -- mm               -- Semispherical endcap length
 u = 100000000.0*dp/(rho*sos)            -- mm/s             -- Temporary variable
 lhex = (u/omg) * sin(k*lrest)           -- mm               -- Heat exchanger length
 lhc = lhex                              -- mm               -- Cold heat exchanger length
 lhh = lhex*2                            -- mm               -- Hot heat exchanger length
-angRad = ang * (pi/180.0)               -- rad              -- Cone half-angle
-uc = (d1 - d2) / (2.0 * tan angRad)     -- mm               -- Unadjusted cone length
-lc = uc + (2*fl)                        -- mm               -- Cone length, adjusting for flanges
+
 wl = 4.0 * lt                           -- mm               -- Wavelength
+
 xa0 = pi * (r0 ** 2.0)                  -- mm^2             -- Speaker cabinet cross-sectional area
 xa1 = pi * (r1 ** 2.0)                  -- mm^2             -- Cross-sectional area 1
 xa2 = pi * (r2 ** 2.0)                  -- mm^2             -- Cross-sectional area 2
 xa3 = pi * ((spdsmall / 2.0) ** 2.0)    -- mm^2             -- Cross-sectional area of speaker
+
 vc = pi*lc*((r1**2)+(r2**2)+(r1*r2))/3  -- mm^3             -- Cone volume
 vb = xa2*lb                             -- mm^3             -- Thin tube volume
 vsph = (4/6)*pi*(lsph**3)               -- mm^3             -- Endcap volume
@@ -32,16 +44,23 @@ vhex = xa1*lhex                         -- mm^3             -- Heat exchanger vo
 vta = xa1*lta                           -- mm^3             -- Volume of Tube A
 vr = xa1*lr                             -- mm^3             -- Regenerator volume (total)
 vra = xa1*lr*(1-br)                     -- mm^3             -- Regenerator volume (gas)
+
 lrest = lt - ((2*lc)+lb+lsph)           -- mm               -- Length of the rest of the resonator
+
 vrest = xa1*lrest                       -- mm^3             -- Volume thereof
-dvrest = spsd*spxmax                    -- mm^3             -- Change in volume as the speaker cycles
-vresti = vrest+dvrest                   -- mm^3             -- Volume at maximum negative speaker displacement (MNSD)
-vrestf = vrest-dvrest                   -- mm^3             -- Volume at maximum positive speaker displacement (MPSD)
+
+dvmax = spsd*spxmax                     -- mm^3             -- Change in volume as the speaker cycles
+
+vresti = vrest+dvmax                    -- mm^3             -- Volume at maximum negative speaker displacement (MNSD)
+vrestf = vrest-dvmax                    -- mm^3             -- Volume at maximum positive speaker displacement (MPSD)
 vtotal = vrest + (2*vc) + vsph + vb     -- mm^3             -- Total resonator volume
 vtotali = vresti + (2*vc) + vsph + vb   -- mm^3             -- Total resonator volume at MSND
 vtotalf = vrestf + (2*vc) + vsph + vb   -- mm^3             -- Total resonator volume at MSPD
+
 ltotal = lbox + lt                      -- mm               -- Total length of device
+
 dprms = dpn / (sqrt 2)                  -- DL               -- Dynamic RMS pressure
+
 loud = 20 * ((log10 (dprms / 20)) + 11) -- dB SPL           -- Sound pressure in decibels relative to the interior sound threshold
 
 -- Derived values
@@ -62,6 +81,7 @@ dvn = dv / hr                           -- DL               -- Normalized viscou
 sprsmall = spdsmall/2                   -- mm               -- Radius of active speaker area
 sprscrew = spdscrew/2                   -- mm               -- Radius of speaker screws
 sprtotal = spdtotal/2                   -- mm               -- Total speaker radius
+
 spomgres = 2 * pi * spfres              -- rad/s            -- Rotational resonant frequency of speaker
 spsd = pi * sprsmall * l                -- mm^2             -- Speaker cone projected area
     where l = sqrt (((splen/2)**2) + (sprsmall**2))
@@ -112,6 +132,7 @@ fCOP x
 optX x = (copMax - fCOP x) / copMax
 dist = 0.1
 xn = bestRoot optX (dist, 1 - dist) acc                     -- Best root x-value
+--xn = rootError optX (dist, 1 - dist) acc
 copAct = fCOP xn                                            -- Actual COP
 
 ---

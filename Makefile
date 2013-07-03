@@ -1,7 +1,7 @@
 OUTPUT_EXEC = "bin/ThermoCalc.bin"
 
 all: src/ThermoCalc.hs
-	cd src && ghc -O3 -rtsopts --make ThermoCalc.hs -o ../$(OUTPUT_EXEC) && cd .. && strip $(OUTPUT_EXEC)
+	cd src && ghc -O2 -rtsopts --make ThermoCalc.hs -fPIC -fasm -o ../$(OUTPUT_EXEC) && cd .. && strip $(OUTPUT_EXEC)
 
 clean:
 	rm -f src/*.hi src/*.o

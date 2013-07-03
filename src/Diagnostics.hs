@@ -19,45 +19,47 @@ checkSpkrD = spdtotal < d0                                  -- Frequency must be
 
 -------------------------------------------------------------------
 
+printNum lbl num units = putStrLn (lbl ++ show' num ++ units)
+
 enviroPrint = do
     putStrLn "-------------------"
     putStrLn "ENVIRONMENT:"
-    putStrLn ("Pressure:            " ++ show' p        ++ " bar")
-    putStrLn ("Temp:                " ++ show' t        ++ " K")
+    printNum "Pressure:            "   p        " bar"
+    printNum "Temp:                "   t        " K"
     putStrLn ""
 
 gaspropPrint = do
     putStrLn "-------------------"
     putStrLn "GAS PROPERTIES:"
-    putStrLn ("C_p:                 " ++ show' cp       ++ " J/(g*K)")
-    putStrLn ("C_v:                 " ++ show' cv       ++ " J/(g*K)")
-    putStrLn ("Gamma:               " ++ show' gam      ++ "")
-    putStrLn ("Prandtl Number:      " ++ show' pr       ++ "")
-    putStrLn ("SoS:                 " ++ show' sos      ++ " mm/s")
-    putStrLn ("Viscosity:           " ++ show' mu       ++ " cP")
-    putStrLn ("Conductivity:        " ++ show' kg       ++ " W/(m*K)")
-    putStrLn ("Density:             " ++ show' rho      ++ " g/mL")
+    printNum "C_p:                 "   cp       " J/(g*K)"
+    printNum "C_v:                 "   cv       " J/(g*K)"
+    printNum "Gamma:               "   gam      ""
+    printNum "Prandtl Number:      "   pr       ""
+    printNum "SoS:                 "   sos      " mm/s"
+    printNum "Viscosity:           "   mu       " cP"
+    printNum "Conductivity:        "   kg       " W/(m*K)"
+    printNum "Density:             "   rho      " g/mL"
     putStrLn ""
 
 syspropPrint = do
     putStrLn "-------------------"
     putStrLn "SYSTEM PROPERTIES:"
-    putStrLn ("Total length:        " ++ show' ltotal   ++ " mm")
-    putStrLn ("Mach #:              " ++ show' mach     ++ " Mach")
-    putStrLn ("Loudness:            " ++ show' loud     ++ " dB SPL")
-    putStrLn ("Actual COP:          " ++ show' copAct   ++ "")
-    putStrLn ("Maximum COP:         " ++ show' copMax   ++ "")
-    putStrLn ("Frequency:           " ++ show' f        ++ " Hz")
-    putStrLn ("Wavelength:          " ++ show' wl       ++ " mm")
-    putStrLn ("Normalizer:          " ++ show' k        ++ " mm^-1")
-    putStrLn ("Temp. diff.:         " ++ show' dt       ++ " K")
-    putStrLn ("Norm. temp. diff.:   " ++ show' dtn      ++ "")
-    putStrLn ("Pres. diff.:         " ++ show' dp       ++ " bar")
-    putStrLn ("Norm. pres. diff.:   " ++ show' dpn      ++ "")
-    putStrLn ("Thermal PD:          " ++ show' dk       ++ " mm")
-    putStrLn ("Normalized TPD:      " ++ show' dkn      ++ "")
-    putStrLn ("Viscous PD:          " ++ show' dv       ++ " mm")
-    putStrLn ("Normalized VPD:      " ++ show' dvn      ++ "")
+    printNum "Total length:        "   ltotal   " mm"
+    printNum "Mach #:              "   mach     " Mach"
+    printNum "Loudness:            "   loud     " dB SPL"
+    printNum "Actual COP:          "   copAct   ""
+    printNum "Maximum COP:         "   copMax   ""
+    printNum "Frequency:           "   f        " Hz"
+    printNum "Wavelength:          "   wl       " mm"
+    printNum "Normalizer:          "   k        " mm^-1"
+    printNum "Temp. diff.:         "   dt       " K"
+    printNum "Norm. temp. diff.:   "   dtn      ""
+    printNum "Pres. diff.:         "   dp       " bar"
+    printNum "Norm. pres. diff.:   "   dpn      ""
+    printNum "Thermal PD:          "   dk       " mm"
+    printNum "Normalized TPD:      "   dkn      ""
+    printNum "Viscous PD:          "   dv       " mm"
+    printNum "Normalized VPD:      "   dvn      ""
     putStrLn ""
 
 diagChecks = do
@@ -76,84 +78,84 @@ diagChecks = do
 cabinetPrint = do
     putStrLn "-------------------"
     putStrLn "CABINET PROPERTIES:"
-    putStrLn ("Diameter:            " ++ show' d0       ++ " mm")
-    putStrLn ("Length:              " ++ show' lbox     ++ " mm")
-    putStrLn ("Cross-section area:  " ++ show' xa0      ++ " mm^2")
-    putStrLn ("Volume:              " ++ show' vbox     ++ " mm^3")
+    printNum "Diameter:            "   d0       " mm"
+    printNum "Length:              "   lbox     " mm"
+    printNum "Cross-section area:  "   xa0      " mm^2"
+    printNum "Volume:              "   vbox     " mm^3"
     putStrLn ""
 
 
 speakerPrint = do
     putStrLn "-------------------"
     putStrLn "SPEAKER PROPERTIES:"
-    putStrLn ("Diameter (inner):    " ++ show' spdsmall ++ " mm")
-    putStrLn ("Diameter (screw):    " ++ show' spdscrew ++ " mm")
-    putStrLn ("Diameter (total):    " ++ show' spdtotal ++ " mm")
-    putStrLn ("Length:              " ++ show' splen    ++ " mm")
-    putStrLn ("P. surface area:     " ++ show' spsd     ++ " mm^2")
-    putStrLn ("Force factor (Bl):   " ++ show' spbl     ++ " T*m")
-    putStrLn ("Spring constant:     " ++ show' spkc     ++ " N/m")
-    putStrLn ("Moving mass:         " ++ show' spmms    ++ " kg")
-    putStrLn ("Mech. resistance:    " ++ show' sprms    ++ " N*s/m")
-    putStrLn ("Elec. resistance:    " ++ show' sprdc    ++ " ohm")
-    putStrLn ("Coil inductance:     " ++ show' spinduc  ++ " H")
+    printNum "Diameter (inner):    "   spdsmall " mm"
+    printNum "Diameter (screw):    "   spdscrew " mm"
+    printNum "Diameter (total):    "   spdtotal " mm"
+    printNum "Length:              "   splen    " mm"
+    printNum "P. surface area:     "   spsd     " mm^2"
+    printNum "Force factor (Bl):   "   spbl     " T*m"
+    printNum "Spring constant:     "   spkc     " N/m"
+    printNum "Moving mass:         "   spmms    " kg"
+    printNum "Mech. resistance:    "   sprms    " N*s/m"
+    printNum "Elec. resistance:    "   sprdc    " ohm"
+    printNum "Coil inductance:     "   spinduc  " H"
     putStrLn ""
 
 bigTubePrint = do
     putStrLn "-------------------"
     putStrLn "TUBE A PROPERTIES:"
-    putStrLn ("Diameter:            " ++ show' d1       ++ " mm")
-    putStrLn ("Length:              " ++ show' lta      ++ " mm")
-    putStrLn ("Cross-section area:  " ++ show' xa1      ++ " mm^2")
-    putStrLn ("Volume:              " ++ show' vta      ++ " mm^3")
+    printNum "Diameter:            "   d1       " mm"
+    printNum "Length:              "   lta      " mm"
+    printNum "Cross-section area:  "   xa1      " mm^2"
+    printNum "Volume:              "   vta      " mm^3"
     putStrLn ""
 
 heatExchangerPrint = do
     putStrLn "-------------------"
     putStrLn "HEX PROPERTIES:"
-    putStrLn ("Diameter:            " ++ show' d1       ++ " mm")
-    putStrLn ("Length:              " ++ show' lhex     ++ " mm")
-    putStrLn ("Blockage ratio:      " ++ show' br       ++ "")
-    putStrLn ("Cross-section area:  " ++ show' xa1      ++ " mm^2")
-    putStrLn ("Volume:              " ++ show' vhex     ++ " mm^3")
+    printNum "Diameter:            "   d1       " mm"
+    printNum "Length:              "   lhex     " mm"
+    printNum "Blockage ratio:      "   br       ""
+    printNum "Cross-section area:  "   xa1      " mm^2"
+    printNum "Volume:              "   vhex     " mm^3"
     putStrLn ""
 
 regenPrint = do
     putStrLn "-------------------"
     putStrLn "REGEN PROPERTIES:"
-    putStrLn ("Diameter:            " ++ show' d1       ++ " mm")
-    putStrLn ("Length:              " ++ show' lr       ++ " mm")
-    putStrLn ("Blockage ratio:      " ++ show' br       ++ "")
-    putStrLn ("Hydraulic radius:    " ++ show' hr       ++ " mm")
-    putStrLn ("Stack spacing:       " ++ show' (hr/2)   ++ " mm")
-    putStrLn ("Plate thickness:     " ++ show' st       ++ " mm")
-    putStrLn ("Cross-section area:  " ++ show' xa1      ++ " mm^2")
-    putStrLn ("Volume:              " ++ show' vr       ++ " mm^3")
+    printNum "Diameter:            "   d1       " mm"
+    printNum "Length:              "   lr       " mm"
+    printNum "Blockage ratio:      "   br       ""
+    printNum "Hydraulic radius:    "   hr       " mm"
+    printNum "Stack spacing:       "   (hr/2)   " mm"
+    printNum "Plate thickness:     "   st       " mm"
+    printNum "Cross-section area:  "   xa1      " mm^2"
+    printNum "Volume:              "   vr       " mm^3"
     putStrLn ""
 
 conePrint = do
     putStrLn "-------------------"
     putStrLn "CONE PROPERTIES:"
-    putStrLn ("Start Diameter:      " ++ show' d1       ++ " mm")
-    putStrLn ("End Diameter:        " ++ show' d2       ++ " mm")
-    putStrLn ("Length:              " ++ show' lc       ++ " mm")
-    putStrLn ("Opening Angle:       " ++ show' (2*ang)  ++ " deg")
-    putStrLn ("Volume:              " ++ show' vc       ++ " mm^3")
+    printNum "Start Diameter:      "   d1       " mm"
+    printNum "End Diameter:        "   d2       " mm"
+    printNum "Length:              "   lc       " mm"
+    printNum "Opening Angle:       "   (2*cang) " deg"
+    printNum "Volume:              "   vc       " mm^3"
     putStrLn ""
 
 smallTubePrint = do
     putStrLn "-------------------"
     putStrLn "TUBE B PROPERTIES:"
-    putStrLn ("Diameter:            " ++ show' d2       ++ " mm")
-    putStrLn ("Length:              " ++ show' lb       ++ " mm")
-    putStrLn ("Cross-section area:  " ++ show' xa2      ++ " mm^2")
-    putStrLn ("Volume:              " ++ show' vb       ++ " mm^3")
+    printNum "Diameter:            "   d2       " mm"
+    printNum "Length:              "   lb       " mm"
+    printNum "Cross-section area:  "   xa2      " mm^2"
+    printNum "Volume:              "   vb       " mm^3"
     putStrLn ""
 
 capPrint = do
     putStrLn "-------------------"
     putStrLn "CAP PROPERTIES:"
-    putStrLn ("Diameter:            " ++ show' d1       ++ " mm")
-    putStrLn ("Length:              " ++ show' lsph     ++ " mm")
-    putStrLn ("Volume:              " ++ show' vsph     ++ " mm^3")
+    printNum "Diameter:            "   d1       " mm"
+    printNum "Length:              "   lsph     " mm"
+    printNum "Volume:              "   vsph     " mm^3"
     putStrLn ""
