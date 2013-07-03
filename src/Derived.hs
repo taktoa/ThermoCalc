@@ -2,7 +2,7 @@
 module Derived where
 
 import Input
-import Utility (sin2, cos2, cot, bestRoot, acc)
+import Utility (sin2, cos2, cot, log10, bestRoot, acc)
 
 -- Derived dimensions
 lr = (2*lrest) - ((wl * xn) / pi)
@@ -40,6 +40,9 @@ vrestf = vrest-dvrest                   -- mm^3             -- Volume at maximum
 vtotal = vrest + (2*vc) + vsph + vb     -- mm^3             -- Total resonator volume
 vtotali = vresti + (2*vc) + vsph + vb   -- mm^3             -- Total resonator volume at MSND
 vtotalf = vrestf + (2*vc) + vsph + vb   -- mm^3             -- Total resonator volume at MSPD
+ltotal = lbox + lt                      -- mm               -- Total length of device
+dprms = dpn / (sqrt 2)                  -- DL               -- Dynamic RMS pressure
+loud = 20 * ((log10 (dprms / 20)) + 11) -- dB SPL           -- Sound pressure in decibels relative to the interior sound threshold
 
 -- Derived values
 pr = (mu*cp)/kg                         -- DL               -- Prandtl number
@@ -49,7 +52,7 @@ omg = 2*pi*f                            -- rad/s            -- Rotational freque
 k = (2*pi) / wl                         -- mm^-1            -- Normalization factor
 dp = dpn*p                              -- bar              -- Absolute pressure differential
 dtn = dt / t                            -- DL               -- Relative temperature differential
-dpn = (vtotali-vtotalf)/vtotal          -- DL               -- Relative pressure differential
+dpn = (vtotali-vtotalf)/(2*vtotal)      -- DL               -- Relative pressure differential
 dk = sqrt (kg / (rho*cp*pi*f))          -- mm               -- Thermal penetration depth
 dkn = dk / hr                           -- DL               -- Normalized thermal penetration depth
 dv = sqrt (mu / (rho*pi*f))             -- mm               -- Viscous penetration depth

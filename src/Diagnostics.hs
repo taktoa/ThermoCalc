@@ -42,7 +42,9 @@ gaspropPrint = do
 syspropPrint = do
     putStrLn "-------------------"
     putStrLn "SYSTEM PROPERTIES:"
+    putStrLn ("Total length:        " ++ show' ltotal   ++ " mm")
     putStrLn ("Mach #:              " ++ show' mach     ++ " Mach")
+    putStrLn ("Loudness:            " ++ show' loud     ++ " dB SPL")
     putStrLn ("Actual COP:          " ++ show' copAct   ++ "")
     putStrLn ("Maximum COP:         " ++ show' copMax   ++ "")
     putStrLn ("Frequency:           " ++ show' f        ++ " Hz")

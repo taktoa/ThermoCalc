@@ -9,7 +9,7 @@ t = 298.15                              -- K                -- Temperature
 dt = 30.0                               -- K                -- Temperature differential
 
 -- Input dimensions
-lt = 650.0                              -- mm               -- Total resonator length
+lt = 750.0                              -- mm               -- Total resonator length
 --- Values are for Schedule 40, NPS size 8, NPS size 3, and NPS size 1.5 pipe
 d0 = 202.720                            -- mm               -- Speaker tube inside diameter
 d1 = 77.920                             -- mm               -- Large tube inside diameter
