@@ -25,7 +25,7 @@ r1 = d1/2                               -- mm               -- Radius of initial
 r2 = d2/2                               -- mm               -- Radius of smaller tube
 
 lsph = (d1/2)                           -- mm               -- Semispherical endcap length
-u = 100000000.0*dp/(rho*sos)            -- mm/s             -- Temporary variable
+u = (10^8)*dp/(rho*sos)                 -- mm/s             -- Temporary variable
 lhex = (u/omg) * sin(k*lrest)           -- mm               -- Heat exchanger length
 lhc = lhex                              -- mm               -- Cold heat exchanger length
 lhh = lhex*2                            -- mm               -- Hot heat exchanger length
