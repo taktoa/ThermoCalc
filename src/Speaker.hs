@@ -76,21 +76,39 @@ getQTotal d g = (qe * qm) / (qe + qm)
         where
         qe = getQElec d g
         qm = getQMech d g
-getRotResFreq d g = (2 * pi * radian) * getResFreq d g
+getConeSurf d g = (pi/8) * ds * (pyth len di)
+        where
+        di = getInnerDiam d g
+        len = getThickness d g
+getCompliance d g = cv / (rho * (sos**2) * (sd**2))
+        where
+        cv = getCompVol d g
+        rho = getRHO g
+        sos = getSV g
+        sd = getConeSurf d g
+getBLValue d g = sqrt (rdc / (2 * pi * fres * qes * cms))
+        where
+        rdc = getElecResist d g
+        fres = getResFreq d g
+        qes = getQElec d g
+        cms = getCompliance d g
+getMovMassAir d g = (bl**2) * (qes / (2 * pi * fres * rdc))
+        where
+        bl = getBLValue d g
+        qes = getQElec d g
+        fres = getResFreq d g
+        rdc = getElecResist d g
+--getMovMassNoAir
+getMechResistance d g = 2 * pi * fres * mms / qms
+        where
+        fres = getResFreq d g
+        mms = getMovMassAir d g
+        qms = getQMech d g
+getSpringConstant d g = 1 / (getCompliance d g)
+getSpeakerVolume d g = (5*pi/48) * len * (dt**2)                        -- Rough approximation of speaker volume
+        where
+        dt = getTotalDiam d g
+        len = getThickness d g
 
 
-spomgres = 2 * pi * spfres              -- rad/s            -- Rotational resonant frequency of speaker
-spsd = pi * sprsmall * l                -- mm^2             -- Speaker cone projected area
-    where l = sqrt (((splen/2)**2) + (sprsmall**2))
-spcms = (10**6) * spvas / a             -- m/N              -- Speaker compliance
-    where a = rho * (sos**2) * (spsd**2)
-spbl = sqrt (sprdc / a)                 -- T * m            -- Speaker force factor
-    where a = spomgres * spqes * spcms
-spmms = (spbl**2) * a                   -- kg               -- Speaker moving mass, including air
-    where a = spqes / (spomgres * sprdc)
-sprms = spomgres * spmms / spqms        -- N*s/m            -- Speaker mechanical resistance
-spkc = 1 / spcms                        -- N/m              -- Speaker spring constant
-spalpha = ((f/spfres)**2) - 1           -- DL               -- Speaker cabinet alpha
-vmagnet = pi*splen*(spdtotal**2.0)/32   -- mm^3             -- Rough approximation of speaker magnet volume
-vscone = 7*pi*splen*(spdtotal**2.0)/96  -- mm^3             -- Rough approximation of speaker cone volume
-vspeaker = vmagnet + vscone             -- mm^3             -- Rough approximation of speaker volume
+getAlphaValue d g = ((f/fres)**2) - 1

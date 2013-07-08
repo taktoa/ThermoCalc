@@ -9,6 +9,8 @@ import Data.Word
 a // b = (fromIntegral a) / (fromIntegral b)
 e a b = a * (10.0 ** b)                                     -- "e" function; i.e.: 1.3e6 = 1.3 * (10^6) = 1300000
 
+pyth a b = sqrt ((a ** 2) + (b ** 2))
+
 sin2 x = sin x ** 2.0                                       -- Trigonometric utility functions
 cos2 x = cos x ** 2.0
 tan2 x = tan x ** 2.0
