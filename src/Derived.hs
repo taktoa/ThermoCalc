@@ -7,10 +7,6 @@ import Utility (sin2, cos2, cot, log10, bestRoot, acc)
 -- Derived dimensions
 st = (1  - br) * (hr/br)                -- mm               -- Stack "thickness"
 
-spvas = sprvas * (p / p_air)            -- mm^3             -- Speaker compliance volume in the working fluid
-spfres = sprfres * (sos / sos_air)      -- Hz               -- Speaker resonant frequency in the working fluid
-spfmax = sprfmax * (sos / sos_air)      -- Hz               -- Speaker maximum frequency in the working fluid      
-spfmin = sprfmin * (sos / sos_air)      -- Hz               -- Speaker minimum frequency in the working fluid
 
 lr = (2*lrest) - ((wl * xn) / pi)       -- mm               -- Regenerator length
 lta = lrest - lr                        -- mm               -- Length of the initial tube
@@ -32,10 +28,10 @@ lhh = lhex*2                            -- mm               -- Hot heat exchange
 
 wl = 4.0 * lt                           -- mm               -- Wavelength
 
-xa0 = pi * (r0 ** 2.0)                  -- mm^2             -- Speaker cabinet cross-sectional area
-xa1 = pi * (r1 ** 2.0)                  -- mm^2             -- Cross-sectional area 1
-xa2 = pi * (r2 ** 2.0)                  -- mm^2             -- Cross-sectional area 2
-xa3 = pi * ((spdsmall / 2.0) ** 2.0)    -- mm^2             -- Cross-sectional area of speaker
+xa0 = circleArea r0                     -- mm^2             -- Speaker cabinet cross-sectional area
+xa1 = circleArea r1                     -- mm^2             -- Cross-sectional area 1
+xa2 = circleArea r2                     -- mm^2             -- Cross-sectional area 2
+xa3 = circleArea' spdsmall              -- mm^2             -- Cross-sectional area of speaker
 
 vc = pi*lc*((r1**2)+(r2**2)+(r1*r2))/3  -- mm^3             -- Cone volume
 vb = xa2*lb                             -- mm^3             -- Thin tube volume
@@ -60,43 +56,11 @@ vtotalf = vrestf + (2*vc) + vsph + vb   -- mm^3             -- Total resonator v
 ltotal = lbox + lt                      -- mm               -- Total length of device
 
 dprms = dpn / (sqrt 2)                  -- DL               -- Dynamic RMS pressure
-
 loud = 20 * ((log10 (dprms / 20)) + 11) -- dB SPL           -- Sound pressure in decibels relative to the interior sound threshold
 
 -- Derived values
-pr = (mu*cp)/kg                         -- DL               -- Prandtl number
-mach = (100000000*dp)/(rho*(sos**2))    -- Mach             -- Mach number of resonator flow
-f = sos / wl                            -- hertz            -- Frequency
-omg = 2*pi*f                            -- rad/s            -- Rotational frequency
-k = (2*pi) / wl                         -- mm^-1            -- Normalization factor
-dp = dpn*p                              -- bar              -- Absolute pressure differential
-dtn = dt / t                            -- DL               -- Relative temperature differential
-dpn = (vtotali-vtotalf)/(2*vtotal)      -- DL               -- Relative pressure differential
-dk = sqrt (kg / (rho*cp*pi*f))          -- mm               -- Thermal penetration depth
-dkn = dk / hr                           -- DL               -- Normalized thermal penetration depth
-dv = sqrt (mu / (rho*pi*f))             -- mm               -- Viscous penetration depth
-dvn = dv / hr                           -- DL               -- Normalized viscous penetration depth
 
 --- Thiele-Small stuff
-sprsmall = spdsmall/2                   -- mm               -- Radius of active speaker area
-sprscrew = spdscrew/2                   -- mm               -- Radius of speaker screws
-sprtotal = spdtotal/2                   -- mm               -- Total speaker radius
-
-spomgres = 2 * pi * spfres              -- rad/s            -- Rotational resonant frequency of speaker
-spsd = pi * sprsmall * l                -- mm^2             -- Speaker cone projected area
-    where l = sqrt (((splen/2)**2) + (sprsmall**2))
-spcms = (10**6) * spvas / a             -- m/N              -- Speaker compliance
-    where a = rho * (sos**2) * (spsd**2)
-spbl = sqrt (sprdc / a)                 -- T * m            -- Speaker force factor
-    where a = spomgres * spqes * spcms
-spmms = (spbl**2) * a                   -- kg               -- Speaker moving mass, including air
-    where a = spqes / (spomgres * sprdc)
-sprms = spomgres * spmms / spqms        -- N*s/m            -- Speaker mechanical resistance
-spkc = 1 / spcms                        -- N/m              -- Speaker spring constant
-spalpha = ((f/spfres)**2) - 1           -- DL               -- Speaker cabinet alpha
-vmagnet = pi*splen*(spdtotal**2.0)/32   -- mm^3             -- Rough approximation of speaker magnet volume
-vscone = 7*pi*splen*(spdtotal**2.0)/96  -- mm^3             -- Rough approximation of speaker cone volume
-vspeaker = vmagnet + vscone             -- mm^3             -- Rough approximation of speaker volume
 vbox = (spvas / spalpha) + vspeaker     -- mm^3             -- Speaker cabinet volume
 lbox = vbox/xa0                         -- mm               -- Speaker cabinet length
 

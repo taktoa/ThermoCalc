@@ -69,3 +69,9 @@ applyError f x inerr = (x, lower, y, upper)
 rootError f brckt d inerr = applyError f root inerr
     where
     root = bestRoot f brckt d
+
+circleArea r = pi * r**2.0
+circleArea' d = (1/4) * pi * d**2.0
+
+sphereVol r = (4/3) * pi * r**3.0
+sphereVol' d = (1/6) * pi * d**3.0
