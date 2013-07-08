@@ -1,6 +1,8 @@
 -- Collection of utility functions
 module Utility where
 
+import Numeric.Units.Dimensional.Prelude (ThermodynamicTemperature, ElectricResistance, Dim, Quantity, (^), pos2)
+import Numeric.NumType (Pos1, Neg1, Pos2, Neg2, Zero)
 import Data.Function (on)
 import Data.List (minimumBy)
 import Data.Decimal
@@ -32,11 +34,26 @@ lst4 (_, _, _, d) = d
 
 log10 = logBase 10
 
+type Temperature = ThermodynamicTemperature
+type Resistance = ElectricResistance
+type DCompliance = Dim Zero Neg1 Pos2 Zero Zero Zero Zero
+type Compliance = Quantity DCompliance
+type DSpringConstant = Dim Zero Pos1 Neg2 Zero Zero Zero Zero
+type SpringConstant = Quantity DSpringConstant
+type DBLValue = Dim Pos1 Pos1 Neg2 Neg1 Zero Zero Zero
+type BLValue = Quantity DBLValue
+a !+ b = a Prelude.+ b
+a !* b = a Prelude.* b
+a !/ b = a Prelude./ b
+a !** b = a Prelude.** b
+
+squ a = a Numeric.Units.Dimensional.Prelude.^ pos2
+
 places :: Int                                               -- Max number of decimal places in a printed number
 places = 8
 
 round_ :: Int -> Double -> Double
-round_ p x = round (x * (10^p)) // (10^p)
+round_ p x = round (x * (10 Prelude.^ p)) // (10 Prelude.^ p)
 
 show_ :: Int -> Double -> String                            -- Prints fixed-length numbers
 show_ p x
@@ -68,7 +85,7 @@ applyError f x inerr = (x, lower, y, upper)
     upper = if a > b then a else b
     lower = if a > b then b else a
     
-rootError f brckt d inerr = applyError f root inerr
+rootError f brckt d = applyError f root
     where
     root = bestRoot f brckt d
 

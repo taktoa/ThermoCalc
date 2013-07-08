@@ -1,9 +1,11 @@
 module Speaker where
 
-import Numeric.Units.Dimensional
+import Utility
+import Input
+import qualified Prelude
+import Prelude (Double)
+import Numeric.Units.Dimensional.Prelude
 import WorkingFluid
-
-type Resistance = ElectricResistance
 
 data SpeakerData = SpeakerData {
                     measureData     :: GasData,
@@ -17,14 +19,14 @@ data SpeakerResData = SpeakerResData {
                     minFreq         :: Frequency Double,
                     maxFreq         :: Frequency Double,
                     complianceVol   :: Volume Double,
-                    qMech           :: Double,
-                    qElec           :: Double
+                    diaphragmMass   :: Mass Double,
+                    qMech           :: Dimensionless Double,
+                    qElec           :: Dimensionless Double
                     }
 
 data SpeakerElecData = SpeakerElecData {
                     resistance      :: Resistance Double,
                     inductance      :: Inductance Double,
-                    capacitance     :: Capacitance Double,
                     maxPower        :: Power Double,
                     rmsPower        :: Power Double,
                     impedance       :: Resistance Double
@@ -38,25 +40,26 @@ data SpeakerDimData = SpeakerDimData {
                     maxDisp         :: Length Double
                     }
 
-adjustedResData :: SpeakerData -> GasData -> SpeakerResData
-adjustedResData input newGas = SpeakerResData rf minf maxf comvol qm qe
+adjustedResData :: SpeakerData -> InputData -> SpeakerResData
+adjustedResData s i = SpeakerResData rf minf maxf comvol mmd qm qe
         where
-        oldGas = measureData input
+        oldGas = measureData s
+        newGas = gasData i
         sosRatio = (getSV newGas) / (getSV oldGas)
         rhoRatio = (getRHO newGas) / (getRHO oldGas)
-        SpeakerResData orf ominf omaxf ocomvol qm qe = rawResData input
+        SpeakerResData orf ominf omaxf ocomvol mmd qm qe = rawResData s
         [rf, minf, maxf] = map (\x -> sosRatio * x) [orf, ominf, omaxf]
         comvol = ocomvol * rhoRatio
 
-adjustedElecData :: SpeakerData -> GasData -> SpeakerElecData
-adjustedElecData = rawElecData                                          -- No changes to data
+adjustedElecData :: SpeakerData -> InputData -> SpeakerElecData
+adjustedElecData s i = rawElecData s                                    -- No changes to data
 
-adjustedDimData :: SpeakerData -> GasData -> SpeakerDimData
-adjustedDimData = rawDimData                                            -- No changes to data
+adjustedDimData :: SpeakerData -> InputData -> SpeakerDimData
+adjustedDimData s i = rawDimData s                                      -- No changes to data
 
-adjDimGet f dat gas = f (adjustedDimData dat gas)
-adjResGet f dat gas = f (adjustedResData dat gas)
-adjElcGet f dat gas = f (adjustedElecData dat gas)
+adjDimGet f s input = f (adjustedDimData s input)
+adjResGet f s input = f (adjustedResData s input)
+adjElcGet f s input = f (adjustedElecData s input)
 
 -- Dimension accessor functions
 getInnerDiam = adjDimGet innerDiam
@@ -65,50 +68,78 @@ getTotalDiam = adjDimGet totalDiam
 getThickness = adjDimGet thickness
 getMaxDisp = adjDimGet maxDisp
 
+-- Electrical accessor functions
+getElecResist = adjElcGet resistance
+getElecInduct = adjElcGet inductance
+getElecImped = adjElcGet impedance
+getMaxPower = adjElcGet maxPower
+getRMSPower = adjElcGet rmsPower
+
 -- Resonance accessor functions
 getResFreq = adjResGet resFreq
 getMinFreq = adjResGet minFreq
 getMaxFreq = adjResGet maxFreq
 getCompVol = adjResGet complianceVol
+getDiaMass = adjResGet diaphragmMass
 getQElec = adjResGet qElec
 getQMech = adjResGet qMech
-getQTotal d g = (qe * qm) / (qe + qm)
+getQTotal :: SpeakerData -> InputData -> Dimensionless Double
+getQTotal s i = (qe * qm) / (qe + qm)                                   -- Total Q
         where
-        qe = getQElec d g
-        qm = getQMech d g
-getConeSurf d g = (pi/8) * ds * (pyth len di)
+        qe = getQElec s i
+        qm = getQMech s i
+getConeSurf :: SpeakerData -> InputData -> Area Double
+getConeSurf s i = (pi/_8) * (di * sqrt ((squ len) + (squ di)))          -- Approximation for surface area of cone
         where
-        di = getInnerDiam d g
-        len = getThickness d g
-getCompliance d g = cv / (rho * (sos**2) * (sd**2))
+        di = getInnerDiam s i
+        len = getThickness s i
+getCompliance :: SpeakerData -> InputData -> Compliance Double
+getCompliance s i = cv / (rho * (squ sos) * (squ sd))                   -- Speaker suspension compliance
         where
-        cv = getCompVol d g
-        rho = getRHO g
-        sos = getSV g
-        sd = getConeSurf d g
-getBLValue d g = sqrt (rdc / (2 * pi * fres * qes * cms))
+        cv = getCompVol s i
+        rho = getRHO (gasData i)
+        sos = getSV (gasData i)
+        sd = getConeSurf s i
+getBLValue :: SpeakerData -> InputData -> BLValue Double
+getBLValue s i = sqrt (rdc / (_2 * pi * fres * cms * qes))              -- B*l Thiele-Small value
         where
-        rdc = getElecResist d g
-        fres = getResFreq d g
-        qes = getQElec d g
-        cms = getCompliance d g
-getMovMassAir d g = (bl**2) * (qes / (2 * pi * fres * rdc))
+        rdc = getElecResist s i
+        fres = getResFreq s i
+        qes = getQElec s i
+        cms = getCompliance s i
+getMovMassAir :: SpeakerData -> InputData -> Mass Double
+getMovMassAir s i = (squ bl) * (qes / (_2 * pi * fres * rdc))           -- Moving mass of system, including air
         where
-        bl = getBLValue d g
-        qes = getQElec d g
-        fres = getResFreq d g
-        rdc = getElecResist d g
---getMovMassNoAir
-getMechResistance d g = 2 * pi * fres * mms / qms
+        bl = getBLValue s i
+        qes = getQElec s i
+        fres = getResFreq s i
+        rdc = getElecResist s i
+getMechResistance s i = _2 * pi * fres * mms / qms                      -- Mechanical resistance of speaker
         where
-        fres = getResFreq d g
-        mms = getMovMassAir d g
-        qms = getQMech d g
-getSpringConstant d g = 1 / (getCompliance d g)
-getSpeakerVolume d g = (5*pi/48) * len * (dt**2)                        -- Rough approximation of speaker volume
+        fres = getResFreq s i
+        mms = getMovMassAir s i
+        qms = getQMech s i
+getSpringConstant :: SpeakerData -> InputData -> SpringConstant Double
+getSpringConstant s i = _1 / (getCompliance s i)                        -- Spring constant of the speaker
+getSpeakerVolume :: SpeakerData -> InputData -> Volume Double
+getSpeakerVolume s i = n * pi * len * (squ dt)                          -- Rough approximation of speaker volume
         where
-        dt = getTotalDiam d g
-        len = getThickness d g
-
-
-getAlphaValue d g = ((f/fres)**2) - 1
+        n = ((5 !/ 48) *~ one)
+        dt = getTotalDiam s i
+        len = getThickness s i
+getAlphaValue :: SpeakerData -> InputData -> Dimensionless Double
+getAlphaValue s i = (squ (f/fres)) - _1
+        where
+        fres = getResFreq s i
+        f = getFrequency i
+getBoxVolume :: SpeakerData -> InputData -> Volume Double
+getBoxVolume s i = (vas / alpha) + vs
+        where
+        vas = getCompVol s i
+        alpha = getAlphaValue s i
+        vs = getSpeakerVolume s i
+getBoxLength :: SpeakerData -> InputData -> Length Double
+getBoxLength s i = vb / xa
+        where
+        vb = getBoxVolume s i
+        xa = (pi/_4) * (squ (speakBoxDiam (dimData i)))

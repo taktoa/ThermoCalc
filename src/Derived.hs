@@ -55,14 +55,8 @@ vtotalf = vrestf + (2*vc) + vsph + vb   -- mm^3             -- Total resonator v
 
 ltotal = lbox + lt                      -- mm               -- Total length of device
 
-dprms = dpn / (sqrt 2)                  -- DL               -- Dynamic RMS pressure
-loud = 20 * ((log10 (dprms / 20)) + 11) -- dB SPL           -- Sound pressure in decibels relative to the interior sound threshold
-
--- Derived values
-
---- Thiele-Small stuff
-vbox = (spvas / spalpha) + vspeaker     -- mm^3             -- Speaker cabinet volume
-lbox = vbox/xa0                         -- mm               -- Speaker cabinet length
+dprms = dpn / sqrt 2                    -- DL               -- Dynamic RMS pressure
+loud = 20 * (log10 (dprms / 20) + 11)   -- dB SPL           -- Sound pressure in decibels relative to the interior sound threshold
 
 -- Constraints
 --- Temporary variables to make the equation easier

@@ -5,24 +5,21 @@ import Derived
 import Diagnostics
 import Display (displayDiag)
 
-diagnostic = do
-    enviroPrint
-    gaspropPrint
-    syspropPrint
-    cabinetPrint
-    speakerPrint
-    bigTubePrint
-    heatExchangerPrint
-    regenPrint
-    smallTubePrint
-    conePrint
-    capPrint
-    diagChecks
-    displayDiag
---    let options = [Title "COP vs X"]
---    let options2D = [Range 0 1, Step acc]
---    let func = Function2D options options2D (optX)
---    plot' [Interactive] X11 func
+diagnostic :: InputData -> IO ()
+diagnostic i = do
+    enviroPrint i
+    gaspropPrint i
+    syspropPrint i
+    cabinetPrint i
+    speakerPrint i
+    bigTubePrint i
+    heatExchangerPrint i
+    regenPrint i
+    smallTubePrint i
+    conePrint i
+    capPrint i
+    diagChecks i
+    displayDiag i
 
 main = diagnostic
 

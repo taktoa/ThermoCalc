@@ -1,90 +1,75 @@
 -- Input constants; this is the only file you need to edit, generally
 module Input where
 
-import Utility (e)
+import Utility 
+import WorkingFluid
+import Regenerator
+import Numeric.Units.Dimensional.Prelude
+import qualified Prelude
 
--- Input variables
-p = 5.0                                 -- bar              -- Pressure
-pressureTol = 0.01                      -- DL               -- Relative error of pressure
+data InputData = InputData {
+                    gasData         :: GasData,
+                    dimData         :: DimData,
+                    regenData       :: RegenData
+                    }
 
-t = 298.15                              -- K                -- Temperature
-tempTol = 0.01                          -- DL               -- Relative error of temperature
+data DimData = DimData {
+                    totalLength     :: Length Double,
+                    speakBoxDiam    :: Length Double,
+                    bigtubeDiam     :: Length Double,
+                    smalltubeDiam   :: Length Double
+                    }
 
-dt = 30.0                               -- K                -- Temperature differential
+getWavelength :: InputData -> Length Double
+getWavelength i = _4 * (totalLength (dimData i))
 
--- Input dimensions
-lt = 750.0                              -- mm               -- Total resonator length
+getFrequency :: InputData -> Frequency Double
+getFrequency i = sos / (_4 * (getWavelength i))
+        where
+        sos = getSV (gasData i)
 
---- Values are for Schedule 40, NPS size 8, NPS size 3, and NPS size 1.5 pipe
-d0 = 202.720                            -- mm               -- Speaker tube inside diameter
-d1 = 77.920                             -- mm               -- Large tube inside diameter
-d2 = 40.894                             -- mm               -- Small tube inside diameter
-diamTol = 0.02                          -- DL               -- Pipe diameter tolerance
+getWavenumber :: InputData -> WaveNumber Double
+getWavenumber i = (_2 * pi) / (getWavelength i)
 
---- Values are for thin-wall 400 c/in^2 Celcor
-hr = 0.2925                             -- mm               -- Regenerator hydraulic radius
-br = 0.83                               -- DL               -- Blockage ratio
-regenTol = 0.02                         -- DL               -- Relative error of regenerator values
+getRotFrequency :: InputData -> Frequency Double
+getRotFrequency i = (_2 * pi) * (getFrequency i)
 
---- Shouldn't need to be changed, generally
-cang = 9.0                              -- deg              -- Cone half-angle
-sos_air = 346450.0                      -- mm/s             -- Speed of sound in the gas where the speaker was tested
-p_air = 1.01325                         -- bar              -- Pressure at which the speaker was tested
+getTPD :: InputData -> Length Double
+getTPD i = sqrt (kg / (rho * cp * pi * f))
+        where
+        gd = gasData i
+        (kg, rho, cp) = (getTC gd, getRHO gd, getCP gd)
+        f = getFrequency i
 
--- Speaker Properties
--- These values are for the speaker at: http://goo.gl/EIr3c
--- Feel free to substitute your own Thiele-Small parameters
-sprfmin = 90.0                          -- Hz               -- Minimum frequency
-sprfmax = 3000.0                        -- Hz               -- Maximum frequency
-sprfres = 83.0                          -- Hz               -- Raw resonant frequency
-spFreqTol = 0.01                        -- DL               -- Relative error of speaker frequency values
+getNTPD :: InputData -> Dimensionless Double
+getNTPD i = (getTPD i) / (getHydRadius (regenData i))
 
-sprvas = 7930000.0                      -- mm^3             -- Raw compliance volume
-spxmax = 2.0                            -- mm               -- Speaker cone movement
-spMiscTol = 0.01                        -- DL               -- Relative error of speaker physical values
+getVPD :: InputData -> Length Double
+getVPD i = sqrt (mu / (pi * rho * f))
+        where
+        gd = gasData i
+        (mu, rho) = (getDV gd, getRHO gd)
+        f = getFrequency i
 
-spPrms = 50.0                           -- W                -- RMS power handling
-spPmax = 100.0                          -- W                -- Maximum power input
-sprdc = 4.49                            -- ohm              -- DC coil resistance
-spinduc = 0.00107                       -- H                -- Coil inductance
-spElecTol = 0.01                        -- DL               -- Relative error of speaker electrical values
+getNVPD :: InputData -> Dimensionless Double
+getNVPD i = (getVPD i) / (getHydRadius (regenData i))
 
-spqms = 3.24                            -- DL               -- Mechanical Q
-spqes = 0.89                            -- DL               -- Electrical Q
-spqts = 0.70                            -- DL               -- Total system Q
-spQTol = 0.01                           -- DL               -- Relative error of speaker Q-values
+--mach = (100000000*dp)/(rho*(sos**2))    -- Mach             -- Mach number of resonator flow
+--dp = dpn*p                              -- bar              -- Absolute pressure differential
+--dtn = dt / t                            -- DL               -- Relative temperature differential
+--dpn = (vtotali-vtotalf)/(2*vtotal)      -- DL               -- Relative pressure differential
 
--- Speaker Dimensions
-splen = 70.0                            -- mm               -- Speaker length
-spdsmall = 165.1                        -- mm               -- Diameter of active speaker area
-spdscrew = 171.5                        -- mm               -- Diameter of speaker screws 
-spdtotal = 187.5                        -- mm               -- Total speaker diameter
-spDimTol = 0.02                         -- DL               -- Relative error of speaker dimensions
+---- Input dimensions
+--lt = 750.0                              -- mm               -- Total resonator length
 
--- Constants
--- These are for nitrogen
-cp = 1.040                              -- J/(g*K)          -- Constant-pressure specific heat
-cv = 0.743                              -- J/(g*K)          -- Constant-volume specific heat
-gam = cp/cv                             -- DL               -- Specific heat ratio
-gasConTol = 0.01                        -- DL               -- Relative error of gas constants
+----- Values are for Schedule 40, NPS size 8, NPS size 3, and NPS size 1.5 pipe
+--d0 = 202.720                            -- mm               -- Speaker tube inside diameter
+--d1 = 77.920                             -- mm               -- Large tube inside diameter
+--d2 = 40.894                             -- mm               -- Small tube inside diameter
 
--- These are for helium
---cp = 5.193                              -- J/(g*K)          -- Constant-pressure specific heat
---cv = 3.116                              -- J/(g*K)          -- Constant-volume specific heat
---gam = cp/cv                             -- DL               -- Specific heat ratio
---gasRegTol = 0.01                        -- DL               -- Relative error of gas regressions
+----- Values are for thin-wall 400 c/in^2 Celcor
+--hr = 0.2925                             -- mm               -- Regenerator hydraulic radius
+--br = 0.83                               -- DL               -- Blockage ratio
 
--- Regressions
--- These are for nitrogen
-sos = 1000.0 * (186.77 + (0.55 * t))    -- mm/s             -- Speed of sound
-kg = ((2.9929 `e` (-5)) * t) ** 0.775   -- W/(m*K)          -- Thermal conductivity
-mu = ((1.8417 `e` (-5)) * t) ** 0.775   -- cP               -- Viscosity
-rho = (1.242 * p) / ((3.61 * t) + 8.86) -- g/mL             -- Density
-gasRegTol = 0.01                        -- DL               -- Relative error of gas regressions
-
--- These are for helium
---sos = 1000.0 * (480.589 + (1.7875 * t)) -- mm/s             -- Speed of sound
---kg = ((2.38889 `e` (-4)) * t) ** 0.710  -- W/(m*K)          -- Thermal conductivity
---mu = ((7.96389 `e` (-6)) * t) ** 0.647  -- cP               -- Viscosity
---rho = (0.4791 * p) / t                  -- g/mL             -- Density
---gasRegTol = 0.01                        -- DL               -- Relative error of gas regressions
+----- Shouldn't need to be changed, generally
+--cang = 9.0                              -- deg              -- Cone half-angle
