@@ -32,7 +32,7 @@ getWavelength :: InputData -> Length Double
 getWavelength i = _4 * (totalLength (dimData i))
 
 getFrequency :: InputData -> Frequency Double
-getFrequency i = sos / (_4 * (getWavelength i))
+getFrequency i = sos / (getWavelength i)
         where
         sos = getSV (gasData i)
 

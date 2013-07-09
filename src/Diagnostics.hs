@@ -61,6 +61,7 @@ syspropPrint a = do
     putStrLn "--------------------------------------"
     putStrLn "SYSTEM PROPERTIES:"
     outputData "Total length"       ltotal
+    outputData "Resonator length"   lres
     outputData "Mach number"        mach
     outputData "Abs. loudness"      aloud
     outputData "Rel. loudness"      rloud
@@ -79,7 +80,7 @@ syspropPrint a = do
     outputData "Normalized VPD"     dvn
     where
     i = getInput a
-    ltotal = getCompLength a
+    (ltotal, lres) = (getCompLength a, getTotalLength a)
     (mach, aloud, rloud) = (getMachNum a, getALoudness a, getRLoudness a)
     (acop, mcop) = (getActCOP a, getMaxCOP a)
     (f, wl, k) = (getFrequency i, getWavelength i, getWavenumber i)
@@ -105,11 +106,13 @@ cabinetPrint a = do
     putStrLn "CABINET PROPERTIES:"
     outputData "Diameter"           dia
     outputData "Length"             len
+    outputData "Alpha"              alpha
     outputData "Volume"             vol
     where
     System i s = a
     dia = speakBoxDiam (dimData i)
     (len, vol) = (getBoxLength s i, getBoxVolume s i)
+    alpha = getAlphaValue s i
 
 speakerPrint :: System -> IO ()
 speakerPrint a = do

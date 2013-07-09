@@ -79,7 +79,7 @@ getBigTubeLength :: System -> Length Double
 getBigTubeLength a = (getMaxLength a) - (getRegenLength a)
 
 getPD :: System -> Pressure Double
-getPD a = 5 *~ pascal
+getPD a = 3000 *~ pascal
 
 getNPD :: System -> DimlessDouble
 getNPD a = (getPD a) / (getPres (getGasData (getInput a)))
