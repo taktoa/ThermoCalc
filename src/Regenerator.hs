@@ -10,3 +10,6 @@ data RegenData = RegenData {
                     }
 
 getHydRadius = hydRadius
+getBlockRatio = blockageR
+getTempDiff = tempDiff
+getHydDiam r = _4 * getHydRadius r

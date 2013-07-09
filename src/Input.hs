@@ -54,6 +54,12 @@ getVPD i = sqrt (mu / (pi * rho * f))
 getNVPD :: InputData -> Dimensionless Double
 getNVPD i = (getVPD i) / (getHydRadius (regenData i))
 
+getTD :: InputData -> Temperature Double
+getTD i = getTempDiff (regenData i)
+
+getNTD :: InputData -> Temperature Double
+getNTD i = (getTD i) / (getTemp (gasData i))
+
 --mach = (100000000*dp)/(rho*(sos**2))    -- Mach             -- Mach number of resonator flow
 --dp = dpn*p                              -- bar              -- Absolute pressure differential
 --dtn = dt / t                            -- DL               -- Relative temperature differential

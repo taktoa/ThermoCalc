@@ -26,6 +26,8 @@ data GasModel = GasModel {
 getVal :: (GasModel -> GasCond -> a) -> GasData -> a
 getVal f dat = (f (model dat)) (condition dat)
 
+getTemp dat = temperature (condition dat)
+getPres dat = pressure (condition dat)
 getSV = getVal soundVelocity
 getTC = getVal thermalConductivity
 getDV = getVal dynamicViscosity
