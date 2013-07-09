@@ -9,3 +9,5 @@ clean:
 clean-all:
 	rm -f $(OUTPUT_EXEC) src/*.hi src/*.o
 	    
+hlint: 
+	hlint src/*.hs --report -q || true

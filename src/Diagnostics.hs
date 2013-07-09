@@ -25,12 +25,16 @@ import qualified Prelude
 
 len = 20
 
-outputData :: (Num a, Show a, Show d) => String -> Quantity d a -> IO ()
-outputData l d = putStrLn (l ++ ":" ++ (replicate (len !- (1 !+ length l)) ' ') ++ show d)
+outputData :: (Floating a, RealFrac a, Show a, Show d) => String -> Quantity d a -> IO ()
+outputData l d = putStrLn (l ++ ":" ++ replicate (len !- (1 !+ length l)) ' ' ++ show (round' p d))
+        where
+        p = 2
+        
+separator = "--------------------------------------"
 
 enviroPrint :: System -> IO ()
 enviroPrint a = do
-    putStrLn "--------------------------------------"
+    putStrLn separator
     putStrLn "ENVIRONMENT:"
     outputData "Pressure"           p
     outputData "Temperature"        t
@@ -40,7 +44,7 @@ enviroPrint a = do
 
 gaspropPrint :: System -> IO ()
 gaspropPrint a = do
-    putStrLn "--------------------------------------"
+    putStrLn separator
     putStrLn "GAS PROPERTIES:"
     outputData "C_p"                cp
     outputData "C_v"                cv
@@ -58,7 +62,7 @@ gaspropPrint a = do
 
 syspropPrint :: System -> IO ()
 syspropPrint a = do
-    putStrLn "--------------------------------------"
+    putStrLn separator
     putStrLn "SYSTEM PROPERTIES:"
     outputData "Total length"       ltotal
     outputData "Resonator length"   lres
@@ -102,7 +106,7 @@ syspropPrint a = do
 
 cabinetPrint :: System -> IO ()
 cabinetPrint a = do
-    putStrLn "--------------------------------------"
+    putStrLn separator
     putStrLn "CABINET PROPERTIES:"
     outputData "Diameter"           dia
     outputData "Length"             len
@@ -116,7 +120,7 @@ cabinetPrint a = do
 
 speakerPrint :: System -> IO ()
 speakerPrint a = do
-    putStrLn "--------------------------------------"
+    putStrLn separator
     putStrLn "SPEAKER PROPERTIES:"
     outputData "Diameter (inner)"   dinn
     outputData "Diameter (screw)"   dscr
@@ -140,7 +144,7 @@ speakerPrint a = do
 
 bigTubePrint :: System -> IO ()
 bigTubePrint a = do
-    putStrLn "--------------------------------------"
+    putStrLn separator
     putStrLn "TUBE A PROPERTIES:"
     outputData "Diameter"           dia
     outputData "Length"             len
@@ -149,7 +153,7 @@ bigTubePrint a = do
 
 heatExchangerPrint :: System -> IO ()
 heatExchangerPrint a = do
-    putStrLn "--------------------------------------"
+    putStrLn separator
     putStrLn "HEX PROPERTIES:"
     outputData "Diameter"           dia
     outputData "Length"             len
@@ -160,7 +164,7 @@ heatExchangerPrint a = do
 
 regenPrint :: System -> IO ()
 regenPrint a = do
-    putStrLn "--------------------------------------"
+    putStrLn separator
     putStrLn "REGEN PROPERTIES:"
     outputData "Diameter"           dia
     outputData "Length"             len
@@ -173,7 +177,7 @@ regenPrint a = do
 
 conePrint :: System -> IO ()
 conePrint a = do
-    putStrLn "--------------------------------------"
+    putStrLn separator
     putStrLn "CONE PROPERTIES:"
     outputData "Start diameter"     dia1
     outputData "End diameter"       dia2
@@ -186,7 +190,7 @@ conePrint a = do
 
 smallTubePrint :: System -> IO ()
 smallTubePrint a = do
-    putStrLn "--------------------------------------"
+    putStrLn separator
     putStrLn "TUBE B PROPERTIES:"
     outputData "Diameter"           dia
     outputData "Length"             len
@@ -195,7 +199,7 @@ smallTubePrint a = do
 
 capPrint :: System -> IO ()
 capPrint a = do
-    putStrLn "--------------------------------------"
+    putStrLn separator
     putStrLn "CAP PROPERTIES:"
     outputData "Diameter"           dia
     outputData "Length"             len

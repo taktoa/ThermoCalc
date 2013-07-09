@@ -19,17 +19,17 @@ getInput = inputData
 getSpeaker :: System -> SpeakerData
 getSpeaker = speakerData
 
-cF :: (SpeakerData -> InputData -> a) -> (System -> a)
+cF :: (SpeakerData -> InputData -> a) -> System -> a
 cF f a = f (speakerData a) (inputData a)
 
-cF' :: (InputData -> SpeakerData -> a) -> (System -> a)
+cF' :: (InputData -> SpeakerData -> a) -> System -> a
 cF' f a = f (inputData a) (speakerData a)
 
 getTotalLength :: System -> Length Double
 getTotalLength a = totalLength (dimData (getInput a))
 
 getCompLength :: System -> Length Double
-getCompLength a = (getTotalLength a) + (cF getBoxLength a)
+getCompLength a = getTotalLength a + cF getBoxLength a
 
 getSmallTubeD :: System -> Length Double
 getSmallTubeD a = smalltubeDiam (dimData (getInput a))
@@ -38,13 +38,13 @@ getBigTubeD :: System -> Length Double
 getBigTubeD a = bigtubeDiam (dimData (getInput a))
 
 getDiamRatio :: System -> DimlessDouble
-getDiamRatio a = (getSmallTubeD a) / (getBigTubeD a)
+getDiamRatio a = getSmallTubeD a / getBigTubeD a
 
 getCapLength :: System -> Length Double
-getCapLength a = (getBigTubeD a) / _2
+getCapLength a = getBigTubeD a / _2
 
 getConeLength :: System -> Length Double
-getConeLength a = (d1 - d2) / (_2 * tan ((dtr cang) *~ one))
+getConeLength a = (d1 - d2) / (_2 * tan (dtr cang *~ one))
         where
         (d1, d2) = (getBigTubeD a, getSmallTubeD a)
 
@@ -65,39 +65,39 @@ getRestLength a = lt - ((_2 * lc) + lsph)
         lsph = getCapLength a
         
 getMaxLength :: System -> Length Double
-getMaxLength a = (getRestLength a) - (getSmallTubeLength a)
+getMaxLength a = getRestLength a - getSmallTubeLength a
 
 getRegenLength :: System -> Length Double
-getRegenLength a = _2 * ((getMaxLength a) - ((xn a) / k))
+getRegenLength a = _2 * (getMaxLength a - (xn a / k))
         where
         k = getWavenumber (getInput a)
 
 getSmallTubeLength :: System -> Length Double
-getSmallTubeLength a = thinLengthRoot a
+getSmallTubeLength = thinLengthRoot
 
 getBigTubeLength :: System -> Length Double
-getBigTubeLength a = (getMaxLength a) - (getRegenLength a)
+getBigTubeLength a = getMaxLength a - getRegenLength a
 
 getPD :: System -> Pressure Double
 getPD a = 3000 *~ pascal
 
 getNPD :: System -> DimlessDouble
-getNPD a = (getPD a) / (getPres (getGasData (getInput a)))
+getNPD a = getPD a / getPres (getGasData (getInput a))
 
 getRPD :: System -> DimlessDouble
-getRPD a = (getPD a) / (((Prelude.sqrt 2.0) !* 20) *~ (micro pascal))
+getRPD a = getPD a / ((20 !* psqrt 2.0) *~ micro pascal)
 
 getRNPD :: System -> DimlessDouble
-getRNPD a = (getRPD a) * (atmoPres / (getPres (getGasData (getInput a))))
+getRNPD a = getRPD a * atmoPres / getPres (getGasData (getInput a))
 
 getALoudness :: System -> DimlessDouble
-getALoudness a = (20 *~ one) * (log10' (getRPD a))
+getALoudness a = (20 *~ one) * log10' (getRPD a)
 
 getRLoudness :: System -> DimlessDouble
-getRLoudness a = (20 *~ one) * (log10' (getRNPD a))
+getRLoudness a = (20 *~ one) * log10' (getRNPD a)
 
 getMachNum :: System -> DimlessDouble
-getMachNum a = (getPD a) / (rho * (squ sos))
+getMachNum a = getPD a / (rho * squ sos)
         where
         gd = getGasData (getInput a)
         (rho, sos) = (getRHO gd, getSV gd)
@@ -109,21 +109,20 @@ getActCOP :: System -> DimlessDouble
 getActCOP = copAct
 
 thinLengthRoot :: System -> Length Double
-thinLengthRoot a = lrest - (lt * (bestRoot' optHI brckt (acc *~ one)))
+thinLengthRoot a = lrest - (lt * bestRoot' optHI brckt accD)
         where
         brckt = (lrest/(_2*lt), lrest/lt)
         k = getWavenumber (getInput a)
         dr = getDiamRatio a
         (lc, lt, lrest) = (getConeLength a, getTotalLength a, getRestLength a)
-        tempH lb = _1 / (tan (k*(lrest - (lb*lt))))
+        tempH lb = _1 / tan (k*(lrest - (lb*lt)))
         tempI lb = (dr**_2) * tan (k*((lb*lt) + lc))
         optHI lb = abs (tempH lb - tempI lb)
 
 qcn :: DimlessDouble -> DimlessDouble -> System -> DimlessDouble
 qcn x l a = tempA x * ((tempC * tempB x l) - tempD)
         where
-        n = (_4 * gam * (_1 + pr) * tempL)
-        tempA x = (dkn * (dpn**_2) * sin x) / n
+        tempA x = (dkn * (dpn**_2) * sin x) / (_4 * gam * (_1 + pr) * tempL)
         tempB x l = (dtn * tan x) / ((gam - _1) * br * l)
         tempC = (_1 + pr + sqrt pr) / (_1 + sqrt pr)
         tempD = _1 - (dkn * sqrt pr) + sqrt pr
@@ -137,7 +136,7 @@ qcn x l a = tempA x * ((tempC * tempB x l) - tempD)
 wn :: DimlessDouble -> DimlessDouble -> System -> DimlessDouble
 wn x l a = (tempE x l * (tempF x l - _1) / (_4 * gam)) - tempG x l
         where
-        tempE x l = (dkn * l * (dpn**_2) * (gam - _1) * br * (cos x)**_2)
+        tempE x l = dkn * l * (dpn**_2) * (gam - _1) * br * (cos x)**_2
         tempF x l = (_2 * dtn * tan x) / (br * l * (gam - _1) * (_1 + sqrt pr) * tempL)
         tempG x l = (dkn * l * (dpn**_2) * sqrt pr * (sin x)**_2) / (_4 * gam * br * tempL)
         tempL = _2 - (_2 * dkn * sqrt pr) + (pr * (dkn**_2))
@@ -160,13 +159,13 @@ fixedCOP x a
         cop x l a = qcn x l a / wn x l a
 
 copMax :: System -> DimlessDouble
-copMax a = (_1 / (getNTD (getInput a))) - _1
+copMax a = (_1 / getNTD (getInput a)) - _1
 
 copAct :: System -> DimlessDouble
 copAct a = fixedCOP (xn a) a
 
 xn :: System -> DimlessDouble
-xn a = bestRoot' optX (dist, _1 - dist) (acc *~ one)
+xn a = bestRoot' optX (dist, _1 - dist) accD
         where
         cm = copMax a
         optX x = (cm - fixedCOP x a) / cm

@@ -1,15 +1,16 @@
 -- Collection of utility functions
 module Utility where
 
-import Numeric.Units.Dimensional.Prelude (ThermodynamicTemperature, ElectricResistance, Dim, Dimensionless, Quantity, pos2, _5, _2, (/~~), (/~), one)
+import Numeric.Units.Dimensional.Prelude (ThermodynamicTemperature, ElectricResistance, Dim, Dimensionless, Quantity, pos2, _5, _2, (/~~), (/~), (*~), one)
 import qualified Numeric.Units.Dimensional.Prelude ((^), (+), (**), (-), (*), (/), log)
+import qualified Numeric.Units.Dimensional
 import Numeric.NumType (Pos1, Neg1, Pos2, Neg2, Zero)
 import Data.Function (on)
 import Data.List (minimumBy)
 import Data.Decimal
 import Data.Word
 
-a // b = (fromIntegral a) / (fromIntegral b)
+a // b = fromIntegral a / fromIntegral b
 e a b = a * (10.0 ** b)                                     -- "e" function; i.e.: 1.3e6 = 1.3 * (10^6) = 1300000
 
 cang = 9.0                                                  -- Half-angle of the cones, in degrees
@@ -40,7 +41,7 @@ lst4 (_, _, _, d) = d
 
 log10 = logBase 10
 log10' :: (Floating a) => Dimensionless a -> Dimensionless a
-log10' = fmap (\x -> (log x) / (log 10))
+log10' = fmap (logBase 10)
 
 isNaN' :: (RealFloat a) => Dimensionless a -> Bool
 isNaN' x = isNaN (x /~ one)
@@ -61,6 +62,8 @@ a !* b = a Prelude.* b
 a !/ b = a Prelude./ b
 a !^ b = a Prelude.^ b
 a !** b = a Prelude.** b
+psqrt = Prelude.sqrt
+a !^/ b = b Prelude.** (1 Prelude./ a)
 
 a #+ b = a Numeric.Units.Dimensional.Prelude.+ b
 a #* b = a Numeric.Units.Dimensional.Prelude.* b
@@ -73,8 +76,11 @@ squ a = a #^ pos2
 places :: Int                                               -- Max number of decimal places in a printed number
 places = 8
 
-round_ :: Int -> Double -> Double
-round_ p x = round (x * (10 !^ p)) // (10 !^ p)
+round_ :: (Floating a, RealFrac a) => Int -> a -> Decimal
+round_ p x = realFracToDecimal (fromIntegral p::Word8) (round (x * (10 !^ p)) // (10 !^ p))
+
+round' :: (Floating a, RealFrac a) => Int -> Quantity d a -> Quantity d Decimal
+round' p (Numeric.Units.Dimensional.Dimensional x) = Numeric.Units.Dimensional.Dimensional (round_ p x)
 
 show_ :: Int -> Double -> String                            -- Prints fixed-length numbers
 show_ p x
@@ -85,9 +91,8 @@ show_ p x
     a = show (realFracToDecimal (fromIntegral p :: Word8) x)
     al = length a
     
-show' = show_ places
-
-acc = 0.01                                                  -- Accuracy of the root-finder
+acc = 0.01
+accD = acc *~ one
 
 listgen :: (Enum a, Num a) => (a, a) -> a -> [a]
 listgen (m,n) d = [m, (m !+ d) .. n]
@@ -108,7 +113,7 @@ bestRoot' f brckt d = xs !! index
     xs = listgen' brckt d
     index = fst (minimumBy (compare `on` snd) zipped)
     zipped = zip [0 .. length ys] ys
-    ys = (map f xs) /~~ one
+    ys = map f xs /~~ one
 
 circleArea r = pi * r**2.0
 circleArea' d = (1/4) * pi * d**2.0

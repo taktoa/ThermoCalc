@@ -45,8 +45,8 @@ adjustedResData s i = SpeakerResData rf minf maxf comvol mmd qm qe
         where
         oldGas = measureData s
         newGas = gasData i
-        sosRatio = (getSV newGas) / (getSV oldGas)
-        rhoRatio = (getRHO newGas) / (getRHO oldGas)
+        sosRatio = getSV newGas / getSV oldGas
+        rhoRatio = getRHO newGas / getRHO oldGas
         SpeakerResData orf ominf omaxf ocomvol mmd qm qe = rawResData s
         [rf, minf, maxf] = map (\x -> sosRatio * x) [orf, ominf, omaxf]
         comvol = ocomvol * rhoRatio
@@ -94,17 +94,17 @@ getQElec = adjResGet qElec
 getQMech = adjResGet qMech
 
 getQTotal :: SpeakerData -> InputData -> DimlessDouble
-getQTotal s i = (qe * qm) / (qe + qm)                                   -- Total Q
+getQTotal s i = qe * qm / (qe + qm)                                     -- Total Q
         where
         qe = getQElec s i
         qm = getQMech s i
 getConeSurf :: SpeakerData -> InputData -> Area Double
-getConeSurf s i = (pi/_8) * (di * sqrt ((squ len) + (squ di)))          -- Approximation for surface area of cone
+getConeSurf s i = (pi/_8) * (di * sqrt (squ len + squ di))              -- Approximation for surface area of cone
         where
         di = getInnerD s i
         len = getThickness s i
 getCompliance :: SpeakerData -> InputData -> Compliance Double
-getCompliance s i = cv / (rho * (squ sos) * (squ sd))                   -- Speaker suspension compliance
+getCompliance s i = cv / (rho * squ sos * squ sd)                       -- Speaker suspension compliance
         where
         cv = getCompVol s i
         rho = getRHO (gasData i)
@@ -118,7 +118,7 @@ getBLValue s i = sqrt (rdc / (_2 * pi * fres * cms * qes))              -- B*l T
         qes = getQElec s i
         cms = getCompliance s i
 getMovMass :: SpeakerData -> InputData -> Mass Double
-getMovMass s i = (squ bl) * (qes / (_2 * pi * fres * rdc))              -- Moving mass of system, including air
+getMovMass s i = squ bl * qes / (_2 * pi * fres * rdc)                  -- Moving mass of system, including air
         where
         bl = getBLValue s i
         qes = getQElec s i
@@ -130,15 +130,15 @@ getMechResist s i = _2 * pi * fres * mms / qms                          -- Mecha
         mms = getMovMass s i
         qms = getQMech s i
 getSpringConstant :: SpeakerData -> InputData -> SpringConstant Double
-getSpringConstant s i = _1 / (getCompliance s i)                        -- Spring constant of the speaker
+getSpringConstant s i = _1 / getCompliance s i                          -- Spring constant of the speaker
 getSpeakerVolume :: SpeakerData -> InputData -> Volume Double
-getSpeakerVolume s i = n * pi * len * (squ dt)                          -- Rough approximation of speaker volume
+getSpeakerVolume s i = n * pi * len * squ dt                            -- Rough approximation of speaker volume
         where
-        n = ((5 !/ 48) *~ one)
+        n = (5 !/ 48) *~ one
         dt = getTotalD s i
         len = getThickness s i
 getAlphaValue :: SpeakerData -> InputData -> DimlessDouble
-getAlphaValue s i = (squ (f/fres)) - _1
+getAlphaValue s i = squ (f/fres) - _1
         where
         fres = getResFreq s i
         f = getFrequency i
@@ -152,4 +152,4 @@ getBoxLength :: SpeakerData -> InputData -> Length Double
 getBoxLength s i = vb / xa
         where
         vb = getBoxVolume s i
-        xa = (pi/_4) * (squ (speakBoxDiam (dimData i)))
+        xa = pi * squ (speakBoxDiam (dimData i)) / _4
