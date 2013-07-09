@@ -71,9 +71,9 @@ getDimData :: SpeakerData -> InputData -> SpeakerDimData
 getDimData = adjustedDimData
 
 -- Dimension accessor functions
-getInnerDiam = adjDimGet innerDiam
-getScrewDiam = adjDimGet screwDiam
-getTotalDiam = adjDimGet totalDiam
+getInnerD = adjDimGet innerDiam
+getScrewD = adjDimGet screwDiam
+getTotalD = adjDimGet totalDiam
 getThickness = adjDimGet thickness
 getMaxDisp = adjDimGet maxDisp
 
@@ -92,6 +92,7 @@ getCompVol = adjResGet complianceVol
 getDiaMass = adjResGet diaphragmMass
 getQElec = adjResGet qElec
 getQMech = adjResGet qMech
+
 getQTotal :: SpeakerData -> InputData -> Dimensionless Double
 getQTotal s i = (qe * qm) / (qe + qm)                                   -- Total Q
         where
@@ -116,14 +117,14 @@ getBLValue s i = sqrt (rdc / (_2 * pi * fres * cms * qes))              -- B*l T
         fres = getResFreq s i
         qes = getQElec s i
         cms = getCompliance s i
-getMovMassAir :: SpeakerData -> InputData -> Mass Double
-getMovMassAir s i = (squ bl) * (qes / (_2 * pi * fres * rdc))           -- Moving mass of system, including air
+getMovMass :: SpeakerData -> InputData -> Mass Double
+getMovMass s i = (squ bl) * (qes / (_2 * pi * fres * rdc))              -- Moving mass of system, including air
         where
         bl = getBLValue s i
         qes = getQElec s i
         fres = getResFreq s i
         rdc = getElecResist s i
-getMechResistance s i = _2 * pi * fres * mms / qms                      -- Mechanical resistance of speaker
+getMechResist s i = _2 * pi * fres * mms / qms                          -- Mechanical resistance of speaker
         where
         fres = getResFreq s i
         mms = getMovMassAir s i
