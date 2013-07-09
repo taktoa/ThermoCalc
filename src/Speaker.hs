@@ -20,8 +20,8 @@ data SpeakerResData = SpeakerResData {
                     maxFreq         :: Frequency Double,
                     complianceVol   :: Volume Double,
                     diaphragmMass   :: Mass Double,
-                    qMech           :: Dimensionless Double,
-                    qElec           :: Dimensionless Double
+                    qMech           :: DimlessDouble,
+                    qElec           :: DimlessDouble
                     }
 
 data SpeakerElecData = SpeakerElecData {
@@ -65,7 +65,7 @@ getResData :: SpeakerData -> InputData -> SpeakerResData
 getResData = adjustedResData
 
 getElecData :: SpeakerData -> InputData -> SpeakerElecData
-getElecData = adjustedElecDataData
+getElecData = adjustedElecData
 
 getDimData :: SpeakerData -> InputData -> SpeakerDimData
 getDimData = adjustedDimData
@@ -93,7 +93,7 @@ getDiaMass = adjResGet diaphragmMass
 getQElec = adjResGet qElec
 getQMech = adjResGet qMech
 
-getQTotal :: SpeakerData -> InputData -> Dimensionless Double
+getQTotal :: SpeakerData -> InputData -> DimlessDouble
 getQTotal s i = (qe * qm) / (qe + qm)                                   -- Total Q
         where
         qe = getQElec s i
@@ -101,7 +101,7 @@ getQTotal s i = (qe * qm) / (qe + qm)                                   -- Total
 getConeSurf :: SpeakerData -> InputData -> Area Double
 getConeSurf s i = (pi/_8) * (di * sqrt ((squ len) + (squ di)))          -- Approximation for surface area of cone
         where
-        di = getInnerDiam s i
+        di = getInnerD s i
         len = getThickness s i
 getCompliance :: SpeakerData -> InputData -> Compliance Double
 getCompliance s i = cv / (rho * (squ sos) * (squ sd))                   -- Speaker suspension compliance
@@ -127,7 +127,7 @@ getMovMass s i = (squ bl) * (qes / (_2 * pi * fres * rdc))              -- Movin
 getMechResist s i = _2 * pi * fres * mms / qms                          -- Mechanical resistance of speaker
         where
         fres = getResFreq s i
-        mms = getMovMassAir s i
+        mms = getMovMass s i
         qms = getQMech s i
 getSpringConstant :: SpeakerData -> InputData -> SpringConstant Double
 getSpringConstant s i = _1 / (getCompliance s i)                        -- Spring constant of the speaker
@@ -135,9 +135,9 @@ getSpeakerVolume :: SpeakerData -> InputData -> Volume Double
 getSpeakerVolume s i = n * pi * len * (squ dt)                          -- Rough approximation of speaker volume
         where
         n = ((5 !/ 48) *~ one)
-        dt = getTotalDiam s i
+        dt = getTotalD s i
         len = getThickness s i
-getAlphaValue :: SpeakerData -> InputData -> Dimensionless Double
+getAlphaValue :: SpeakerData -> InputData -> DimlessDouble
 getAlphaValue s i = (squ (f/fres)) - _1
         where
         fres = getResFreq s i

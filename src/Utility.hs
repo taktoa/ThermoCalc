@@ -1,9 +1,8 @@
 -- Collection of utility functions
 module Utility where
 
-import Numeric.Units.Dimensional.Prelude (ThermodynamicTemperature,
-                                ElectricResistance, Dim, Quantity,
-                                (^), (+), (**), (-), (*), (/), pos2)
+import Numeric.Units.Dimensional.Prelude (ThermodynamicTemperature, ElectricResistance, Dim, Dimensionless, Quantity, pos2, _5, _2, (/~~), (/~), one)
+import qualified Numeric.Units.Dimensional.Prelude ((^), (+), (**), (-), (*), (/), log)
 import Numeric.NumType (Pos1, Neg1, Pos2, Neg2, Zero)
 import Data.Function (on)
 import Data.List (minimumBy)
@@ -40,9 +39,15 @@ thd4 (_, _, c, _) = c
 lst4 (_, _, _, d) = d
 
 log10 = logBase 10
+log10' :: (Floating a) => Dimensionless a -> Dimensionless a
+log10' = fmap (\x -> (log x) / (log 10))
+
+isNaN' :: (RealFloat a) => Dimensionless a -> Bool
+isNaN' x = isNaN (x /~ one)
 
 type Temperature = ThermodynamicTemperature
 type Resistance = ElectricResistance
+type DimlessDouble = Dimensionless Double
 type DCompliance = Dim Zero Neg1 Pos2 Zero Zero Zero Zero
 type Compliance = Quantity DCompliance
 type DSpringConstant = Dim Zero Pos1 Neg2 Zero Zero Zero Zero
@@ -51,6 +56,7 @@ type DBLValue = Dim Pos1 Pos1 Neg2 Neg1 Zero Zero Zero
 type BLValue = Quantity DBLValue
 
 a !+ b = a Prelude.+ b
+a !- b = a Prelude.- b
 a !* b = a Prelude.* b
 a !/ b = a Prelude./ b
 a !^ b = a Prelude.^ b
@@ -83,7 +89,11 @@ show' = show_ places
 
 acc = 0.01                                                  -- Accuracy of the root-finder
 
-listgen (m,n) d = [m, (m + d) .. n]                         -- Naive root finder function
+listgen :: (Enum a, Num a) => (a, a) -> a -> [a]
+listgen (m,n) d = [m, (m !+ d) .. n]
+
+listgen' :: (DimlessDouble, DimlessDouble) -> DimlessDouble -> [DimlessDouble]
+listgen' (m,n) d = [m, (m #+ d) .. n]
 
 bestRoot f brckt d = xs !! index
     where
@@ -92,17 +102,13 @@ bestRoot f brckt d = xs !! index
     zipped = zip [0 .. length ys] ys
     ys = map f xs
 
-applyError f x inerr = (x, lower, y, upper)
+bestRoot' :: (DimlessDouble -> DimlessDouble) -> (DimlessDouble, DimlessDouble) -> DimlessDouble -> DimlessDouble
+bestRoot' f brckt d = xs !! index
     where
-    y = f x
-    a = f (x * (1 + inerr))
-    b = f (x * (1 - inerr))
-    upper = if a > b then a else b
-    lower = if a > b then b else a
-    
-rootError f brckt d = applyError f root
-    where
-    root = bestRoot f brckt d
+    xs = listgen' brckt d
+    index = fst (minimumBy (compare `on` snd) zipped)
+    zipped = zip [0 .. length ys] ys
+    ys = (map f xs) /~~ one
 
 circleArea r = pi * r**2.0
 circleArea' d = (1/4) * pi * d**2.0

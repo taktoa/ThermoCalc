@@ -49,7 +49,7 @@ getTPD i = sqrt (kg / (rho * cp * pi * f))
         (kg, rho, cp) = (getTC gd, getRHO gd, getCP gd)
         f = getFrequency i
 
-getNTPD :: InputData -> Dimensionless Double
+getNTPD :: InputData -> DimlessDouble
 getNTPD i = (getTPD i) / (getHydRadius (regenData i))
 
 getVPD :: InputData -> Length Double
@@ -59,13 +59,13 @@ getVPD i = sqrt (mu / (pi * rho * f))
         (mu, rho) = (getDV gd, getRHO gd)
         f = getFrequency i
 
-getNVPD :: InputData -> Dimensionless Double
+getNVPD :: InputData -> DimlessDouble
 getNVPD i = (getVPD i) / (getHydRadius (regenData i))
 
 getTD :: InputData -> Temperature Double
 getTD i = getTempDiff (regenData i)
 
-getNTD :: InputData -> Temperature Double
+getNTD :: InputData -> DimlessDouble
 getNTD i = (getTD i) / (getTemp (gasData i))
 
         

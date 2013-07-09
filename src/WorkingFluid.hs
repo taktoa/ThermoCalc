@@ -37,6 +37,9 @@ getCV dat = cvSpecHeat (model dat)
 getGAM a = (getCP a) / (getCV a)
 getPRN a = ((getCP a) * (getDV a)) / (getTC a)
 
+roomCond :: GasCond
+roomCond = GasCond (101325.0 *~ pascal) (298.15 *~ kelvin)
+
 -- These models should be within 5% relative error for temperatures
 -- between 200 K and 400 K and pressures between 0.5 bar and 50 bar
 
