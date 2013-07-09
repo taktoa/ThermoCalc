@@ -61,6 +61,15 @@ adjDimGet f s input = f (adjustedDimData s input)
 adjResGet f s input = f (adjustedResData s input)
 adjElcGet f s input = f (adjustedElecData s input)
 
+getResData :: SpeakerData -> InputData -> SpeakerResData
+getResData = adjustedResData
+
+getElecData :: SpeakerData -> InputData -> SpeakerElecData
+getElecData = adjustedElecDataData
+
+getDimData :: SpeakerData -> InputData -> SpeakerDimData
+getDimData = adjustedDimData
+
 -- Dimension accessor functions
 getInnerDiam = adjDimGet innerDiam
 getScrewDiam = adjDimGet screwDiam

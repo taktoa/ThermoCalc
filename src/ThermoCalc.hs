@@ -5,21 +5,21 @@ import Derived
 import Diagnostics
 import Display (displayDiag)
 
-diagnostic :: InputData -> IO ()
-diagnostic i = do
-    enviroPrint i
-    gaspropPrint i
-    syspropPrint i
-    cabinetPrint i
-    speakerPrint i
-    bigTubePrint i
-    heatExchangerPrint i
-    regenPrint i
-    smallTubePrint i
-    conePrint i
-    capPrint i
-    diagChecks i
-    displayDiag i
+diagnostic :: System -> IO ()
+diagnostic a = do
+    enviroPrint a
+    gaspropPrint a
+    syspropPrint a
+    cabinetPrint a
+    speakerPrint a
+    bigTubePrint a
+    heatExchangerPrint a
+    regenPrint a
+    smallTubePrint a
+    conePrint a
+    capPrint a
+    diagChecks a
+    displayDiag a
 
 main = diagnostic
 

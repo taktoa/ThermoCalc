@@ -21,27 +21,33 @@ checkSpkrD = spdtotal < d0                                  -- Frequency must be
 
 printNum lbl num units = putStrLn (lbl ++ show' num ++ units)
 
-enviroPrint = do
-    putStrLn "-------------------"
-    putStrLn "ENVIRONMENT:"
-    printNum "Pressure:            "   p        " bar"
-    printNum "Temp:                "   t        " K"
-    putStrLn ""
+enviroPrint a = do
+    let h = "ENVIRONMENT"
+    let m = [("Pressure", p),
+             ("Temperature", t)]
+    outputData h m
+    where
+    p = getPres (getGas a)
+    t = getTemp (getGas a)
 
-gaspropPrint = do
-    putStrLn "-------------------"
-    putStrLn "GAS PROPERTIES:"
-    printNum "C_p:                 "   cp       " J/(g*K)"
-    printNum "C_v:                 "   cv       " J/(g*K)"
-    printNum "Gamma:               "   gam      ""
-    printNum "Prandtl Number:      "   pr       ""
-    printNum "SoS:                 "   sos      " mm/s"
-    printNum "Viscosity:           "   mu       " cP"
-    printNum "Conductivity:        "   kg       " W/(m*K)"
-    printNum "Density:             "   rho      " g/mL"
-    putStrLn ""
+gaspropPrint a = do
+    let h = "GAS PROPERTIES"
+    let m = [("C_p", cp),
+             ("C_v", cv),
+             ("Gamma", gam),
+             ("Prandtl #", pr),
+             ("Sound speed", sos),
+             ("Viscosity", mu),
+             ("Conductivity", kg),
+             ("Density", rho)]
+    outputData h m
+    where
+    gas = getGas a
+    (cp, cv) = (getCP gas, getCV gas)
+    (gam, pr) = (getGAM gas, getPRN gas)
+    (sos, mu, kg, rho) = (getSV gas, getDV gas, getTC gas, getRHO gas)
 
-syspropPrint = do
+syspropPrint a = do
     putStrLn "-------------------"
     putStrLn "SYSTEM PROPERTIES:"
     printNum "Total length:        "   ltotal   " mm"
@@ -61,6 +67,15 @@ syspropPrint = do
     printNum "Viscous PD:          "   dv       " mm"
     printNum "Normalized VPD:      "   dvn      ""
     putStrLn ""
+    where
+    i = getInput a
+    ltotal
+    mach
+    loud
+    (copAct, copMax) = (
+    (f, wl, k) = (getFrequency i, getWavelength i, getWavenumber i)
+    (dt, dtn, dp, dpn) = (getTD i, getNTD i, getPD i, getNPD i)
+    (dk, dkn, dv, dvn) = (getTPD i, getNTPD i, getVPD i, getNVPD i)
 
 diagChecks = do
     putStrLn "-------------------"

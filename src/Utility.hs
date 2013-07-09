@@ -1,7 +1,9 @@
 -- Collection of utility functions
 module Utility where
 
-import Numeric.Units.Dimensional.Prelude (ThermodynamicTemperature, ElectricResistance, Dim, Quantity, (^), pos2)
+import Numeric.Units.Dimensional.Prelude (ThermodynamicTemperature,
+                                ElectricResistance, Dim, Quantity,
+                                (^), (+), (**), (-), (*), (/), pos2)
 import Numeric.NumType (Pos1, Neg1, Pos2, Neg2, Zero)
 import Data.Function (on)
 import Data.List (minimumBy)
@@ -11,7 +13,12 @@ import Data.Word
 a // b = (fromIntegral a) / (fromIntegral b)
 e a b = a * (10.0 ** b)                                     -- "e" function; i.e.: 1.3e6 = 1.3 * (10^6) = 1300000
 
+cang = 9.0                                                  -- Half-angle of the cones, in degrees
+
 pyth a b = sqrt ((a ** 2) + (b ** 2))
+
+dtr x = pi * x / 180.0                                      -- Degrees to radians conversion
+rtd x = 180.0 * x / pi                                      -- Radians to degrees conversion
 
 sin2 x = sin x ** 2.0                                       -- Trigonometric utility functions
 cos2 x = cos x ** 2.0
@@ -42,18 +49,26 @@ type DSpringConstant = Dim Zero Pos1 Neg2 Zero Zero Zero Zero
 type SpringConstant = Quantity DSpringConstant
 type DBLValue = Dim Pos1 Pos1 Neg2 Neg1 Zero Zero Zero
 type BLValue = Quantity DBLValue
+
 a !+ b = a Prelude.+ b
 a !* b = a Prelude.* b
 a !/ b = a Prelude./ b
+a !^ b = a Prelude.^ b
 a !** b = a Prelude.** b
 
-squ a = a Numeric.Units.Dimensional.Prelude.^ pos2
+a #+ b = a Numeric.Units.Dimensional.Prelude.+ b
+a #* b = a Numeric.Units.Dimensional.Prelude.* b
+a #/ b = a Numeric.Units.Dimensional.Prelude./ b
+a #^ b = a Numeric.Units.Dimensional.Prelude.^ b
+a #** b = a Numeric.Units.Dimensional.Prelude.** b
+
+squ a = a #^ pos2
 
 places :: Int                                               -- Max number of decimal places in a printed number
 places = 8
 
 round_ :: Int -> Double -> Double
-round_ p x = round (x * (10 Prelude.^ p)) // (10 Prelude.^ p)
+round_ p x = round (x * (10 !^ p)) // (10 !^ p)
 
 show_ :: Int -> Double -> String                            -- Prints fixed-length numbers
 show_ p x

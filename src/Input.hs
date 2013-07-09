@@ -1,4 +1,3 @@
--- Input constants; this is the only file you need to edit, generally
 module Input where
 
 import Utility 
@@ -19,6 +18,15 @@ data DimData = DimData {
                     bigtubeDiam     :: Length Double,
                     smalltubeDiam   :: Length Double
                     }
+                    
+getGasData :: InputData -> GasData
+getGasData = gasData
+
+getDimData :: InputData -> DimData
+getDimData = dimData
+
+getRegenData :: InputData -> RegenData
+getRegenData = regenData
 
 getWavelength :: InputData -> Length Double
 getWavelength i = _4 * (totalLength (dimData i))
@@ -60,11 +68,7 @@ getTD i = getTempDiff (regenData i)
 getNTD :: InputData -> Temperature Double
 getNTD i = (getTD i) / (getTemp (gasData i))
 
---mach = (100000000*dp)/(rho*(sos**2))    -- Mach             -- Mach number of resonator flow
---dp = dpn*p                              -- bar              -- Absolute pressure differential
---dtn = dt / t                            -- DL               -- Relative temperature differential
---dpn = (vtotali-vtotalf)/(2*vtotal)      -- DL               -- Relative pressure differential
-
+        
 ---- Input dimensions
 --lt = 750.0                              -- mm               -- Total resonator length
 
@@ -76,6 +80,3 @@ getNTD i = (getTD i) / (getTemp (gasData i))
 ----- Values are for thin-wall 400 c/in^2 Celcor
 --hr = 0.2925                             -- mm               -- Regenerator hydraulic radius
 --br = 0.83                               -- DL               -- Blockage ratio
-
------ Shouldn't need to be changed, generally
---cang = 9.0                              -- deg              -- Cone half-angle
