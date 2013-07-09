@@ -88,13 +88,13 @@ getRPD :: System -> DimlessDouble
 getRPD a = (getPD a) / (((Prelude.sqrt 2.0) !* 20) *~ (micro pascal))
 
 getRNPD :: System -> DimlessDouble
-getRNPD a = (getNPD a) / (sqrt _2)
+getRNPD a = (getRPD a) * (atmoPres / (getPres (getGasData (getInput a))))
 
 getALoudness :: System -> DimlessDouble
 getALoudness a = (20 *~ one) * (log10' (getRPD a))
 
 getRLoudness :: System -> DimlessDouble
-getRLoudness a = _2 * (log10' ((getRNPD a) / (20 *~ one)) + _9 + _2)
+getRLoudness a = (20 *~ one) * (log10' (getRNPD a))
 
 getMachNum :: System -> DimlessDouble
 getMachNum a = (getPD a) / (rho * (squ sos))
