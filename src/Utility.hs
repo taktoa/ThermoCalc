@@ -71,6 +71,11 @@ a #/ b = a Numeric.Units.Dimensional.Prelude./ b
 a #^ b = a Numeric.Units.Dimensional.Prelude.^ b
 a #** b = a Numeric.Units.Dimensional.Prelude.** b
 
+funcMap :: [a -> b] -> a -> [b]
+funcMap fs x = zipWith ($) fs xs
+        where
+        xs = replicate (length fs) x
+
 squ a = a #^ pos2
 
 places :: Int                                               -- Max number of decimal places in a printed number

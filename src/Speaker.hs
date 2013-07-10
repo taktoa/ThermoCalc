@@ -148,8 +148,10 @@ getBoxVolume s i = (vas / alpha) + vs
         vas = getCompVol s i
         alpha = getAlphaValue s i
         vs = getSpeakerVolume s i
+getBoxD :: SpeakerData -> InputData -> Length Double
+getBoxD s i = speakBoxDiam (dimData i)
 getBoxLength :: SpeakerData -> InputData -> Length Double
 getBoxLength s i = vb / xa
         where
         vb = getBoxVolume s i
-        xa = pi * squ (speakBoxDiam (dimData i)) / _4
+        xa = pi * squ (getBoxD s i) / _4

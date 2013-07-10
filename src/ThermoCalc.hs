@@ -6,6 +6,7 @@ import System
 import WorkingFluid
 import Regenerator
 import Diagnostics
+import Display
 import Numeric.Units.Dimensional.Prelude
 import qualified Prelude
 
@@ -75,6 +76,7 @@ diagnostic a = do
     smallTubePrint a
     conePrint a
     capPrint a
+    displayDiag a
 
 main = diagnostic ourSystem
 
