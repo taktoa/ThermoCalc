@@ -8,6 +8,7 @@ import Regenerator
 import Utility
 import Numeric.Units.Dimensional.Prelude
 import qualified Prelude
+import qualified PrettyPrinter (show)
 
 -- Checks
 --small = 0.25
@@ -26,7 +27,7 @@ import qualified Prelude
 len = 20
 
 outputData :: (Floating a, RealFrac a, Show a, Show d) => String -> Quantity d a -> IO ()
-outputData l d = putStrLn (l ++ ":" ++ replicate (len !- (1 !+ length l)) ' ' ++ show (round' p d))
+outputData l d = putStrLn (l ++ ":" ++ replicate (len !- (1 !+ length l)) ' ' ++ PrettyPrinter.show (round' p d))
         where
         p = 2
         
