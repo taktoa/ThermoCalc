@@ -37,7 +37,8 @@ data SpeakerDimData = SpeakerDimData {
                     screwDiam       :: Length Double,
                     totalDiam       :: Length Double,
                     thickness       :: Length Double,
-                    maxDisp         :: Length Double
+                    maxDisp         :: Length Double,
+                    surfArea        :: Area Double
                     }
 
 adjustedResData :: SpeakerData -> InputData -> SpeakerResData
@@ -99,10 +100,7 @@ getQTotal s i = qe * qm / (qe + qm)                                     -- Total
         qe = getQElec s i
         qm = getQMech s i
 getConeSurf :: SpeakerData -> InputData -> Area Double
-getConeSurf s i = (pi/_8) * (di * sqrt (squ len + squ di))              -- Approximation for surface area of cone
-        where
-        di = getInnerD s i
-        len = getThickness s i
+getConeSurf s i = surfArea (Speaker.getDimData s i)
 getCompliance :: SpeakerData -> InputData -> Compliance Double
 getCompliance s i = cv / (rho * squ sos * squ sd)                       -- Speaker suspension compliance
         where
@@ -138,7 +136,7 @@ getSpeakerVolume s i = n * pi * len * squ dt                            -- Rough
         dt = getTotalD s i
         len = getThickness s i
 getAlphaValue :: SpeakerData -> InputData -> DimlessDouble
-getAlphaValue s i = squ (f/fres) - _1
+getAlphaValue s i = squ (_4*fres / f) - _1
         where
         fres = getResFreq s i
         f = getFrequency i

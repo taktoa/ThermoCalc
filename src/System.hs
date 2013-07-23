@@ -10,7 +10,8 @@ import qualified Prelude
 
 data System = System {
                     inputData       :: InputData,
-                    speakerData     :: SpeakerData
+                    speakerData     :: SpeakerData,
+                    voltage         :: Voltage Double
                     }
 
 getInput :: System -> InputData
@@ -51,7 +52,7 @@ getConeLength a = (d1 - d2) / (_2 * tan (dtr cang *~ one))
 getHEXLength :: System -> Length Double
 getHEXLength a = (dp / (rho * sos * omg)) * sin (k * lmax)
         where
-        System i s = a
+        System i s _ = a
         (k, omg) = (getWavenumber i, getRotFrequency i)
         gd = gasData (getInput a)
         (rho, sos) = (getRHO gd, getSV gd)
@@ -78,11 +79,33 @@ getSmallTubeLength = thinLengthRoot
 getBigTubeLength :: System -> Length Double
 getBigTubeLength a = getMaxLength a - getRegenLength a
 
+getDisplacement :: System -> Length Double
+getDisplacement a = (bl * v) / (r * cm * (squ w))
+        where
+        System i s v = a
+        w = getRotFrequency i
+        r = getElecResist s i
+        cm = getDiaMass s i
+        bl = getBLValue s i
+
+getWorkingVolume :: System -> Volume Double
+getWorkingVolume a = pi * ((lt * (squ r1)) - cf)
+        where
+        lt = getTotalLength a
+        cf = (squ (r1 - r2))  * (lc + lb)
+        (r1, r2) = (getBigTubeD a / _2, getSmallTubeD a / _2)
+        (lc, lb) = (getConeLength a, getSmallTubeLength a)
+        
 getPD :: System -> Pressure Double
-getPD a = 3000 *~ pascal
+getPD a = getNPD a * getPres (getGasData (getInput a))
 
 getNPD :: System -> DimlessDouble
-getNPD a = getPD a / getPres (getGasData (getInput a))
+getNPD a = dv / wv
+        where
+        wv = getWorkingVolume a
+        disp = getDisplacement a
+        surf = (\(System i s _) -> getConeSurf s i) a
+        dv = disp * surf
 
 getRPD :: System -> DimlessDouble
 getRPD a = getPD a / ((20 !* psqrt 2.0) *~ micro pascal)

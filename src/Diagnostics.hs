@@ -11,16 +11,35 @@ import qualified Prelude
 import PrettyPrinter
 
 -- Checks
---small = 0.25
---maxMach = 0.1                                               -- Maximum mach number. Should not be changed, generally.
---checkMach = mach < maxMach                                  -- At Mach numbers greater than maximum Mach number, equations break down.
---checkStack = lr*k < small                                   -- The pressure across the stack should be constant along its length
---checkTPD = dkn/2 < small                                    -- Stack spacing should be much bigger than dk
---checkVPD = dvn/2 < small                                    -- Stack spacing should be much bigger than dv
---checkTD = dtn < small                                       -- Temp differential should be small compared to average temp
---checkRatio = (hr > (2*dk)) && (hr < (4*dk))                 -- To avoid acoustic effects, hr should be in this range
---checkSpkrF = (f > spfmin) && (f < spfmax)                   -- Frequency must be within speaker's range
---checkSpkrD = spdtotal < d0                                  -- Frequency must be within speaker's range
+checkMach, checkRatio, checkSpkrF, checkStack :: System -> Bool
+checkTD, checkTPD, checkVPD :: System -> Bool
+small = 0.25 *~ one
+maxMach = 0.1 *~ one                                        -- Maximum mach number. Should not be changed, generally.
+checkMach a = mach < maxMach                                -- At Mach numbers greater than maximum Mach number, equations break down.
+        where
+        mach = getMachNum a
+checkStack a = lr*k < small                                 -- The pressure across the stack should be constant along its length
+        where
+        lr = getRegenLength a
+        k = getWavenumber (getInput a)
+checkTPD a = dkn/_2 < small                                 -- Stack spacing should be much bigger than dk
+        where
+        dkn = getNTPD (getInput a)
+checkVPD a = dvn/_2 < small                                 -- Stack spacing should be much bigger than dv
+        where
+        dvn = getNVPD (getInput a)
+checkTD a = dtn < small                                     -- Temp differential should be small compared to average temp
+        where
+        dtn = getNTD (getInput a)
+checkRatio a = (hr > (_2*dk)) && (hr < (_4*dk))             -- To avoid acoustic effects, hr should be in this range
+        where
+        hr = getHydRadius (getRegenData (getInput a))
+        dk = getTPD (getInput a)
+checkSpkrF a = (f > fmin) && (f < fmax)                     -- Frequency must be within speaker's range
+        where
+        System i s _ = a
+        f = getFrequency i
+        (fmin, fmax) = (getMinFreq s i, getMaxFreq s i)
 
 -------------------------------------------------------------------
 
@@ -29,7 +48,7 @@ len = 20
 outputData :: (Floating a, RealFrac a, Show a, Show d) => String -> Quantity d a -> IO ()
 outputData l d = putStrLn (l ++ ":" ++ replicate (len !- (1 !+ length l)) ' ' ++ (show qtr))
         where
-        p = 2
+        p = 6
         qtr = QuantityTr compatDB (round' p d)
         
 separator = "--------------------------------------"
@@ -93,18 +112,18 @@ syspropPrint a = do
     (dt, dtn, dp, dpn) = (getTD i, getNTD i, getPD a, getNPD a)
     (dk, dkn, dv, dvn) = (getTPD i, getNTPD i, getVPD i, getNVPD i)
 
---diagChecks = do
-    --putStrLn "-------------------"
-    --putStrLn "DIAGNOSTICS:"
-    --putStrLn (if checkMach  then "Mach number check passed."    else "Mach number too high! "      ++ show' mach     ++ " > " ++ show' maxMach)
-    --putStrLn (if checkTPD   then "TPD check passed."            else "TPD check failed! "          ++ show' (dkn/2)  ++ " > " ++ show' small)
-    --putStrLn (if checkVPD   then "VPD check passed."            else "VPD check failed! "          ++ show' (dvn/2)  ++ " > " ++ show' small)
-    --putStrLn (if checkTD    then "TD check passed."             else "TD check failed! "           ++ show' dtn      ++ " > " ++ show' small)
-    --putStrLn (if checkStack then "Stack check passed."          else "Stack check failed! "        ++ show' (lr*k)   ++ " > " ++ show' small)
-    --putStrLn (if checkRatio then "Ratio check passed."          else "Ratio check failed! "        ++ show' (hr/dk)  ++ " | " ++ show' 2.0000 ++ ", " ++ show' 4.0000)
-    --putStrLn (if checkSpkrF then "Speaker freq check passed."   else "Speaker freq check failed! " ++ show' f        ++ " | " ++ show' spfmin ++ ", " ++ show' spfmax)
-    --putStrLn (if checkSpkrD then "Speaker diam check passed."   else "Speaker diam check failed! " ++ show' spdtotal ++ " > " ++ show' d0)
-    --putStrLn ""
+diagChecks :: System -> IO ()
+diagChecks a = do
+    putStrLn "-------------------"
+    putStrLn "DIAGNOSTICS:"
+    putStrLn (if checkMach a    then "Mach number check passed."    else "Mach number too high!")
+    putStrLn (if checkTPD a     then "TPD check passed."            else "TPD check failed!")
+    putStrLn (if checkVPD a     then "VPD check passed."            else "VPD check failed!")
+    putStrLn (if checkTD a      then "TD check passed."             else "TD check failed!")
+    putStrLn (if checkStack a   then "Stack check passed."          else "Stack check failed!")
+    putStrLn (if checkRatio a   then "Ratio check passed."          else "Ratio check failed!")
+    putStrLn (if checkSpkrF a   then "Speaker freq check passed."   else "Speaker freq check failed!")
+    putStrLn ""
 
 cabinetPrint :: System -> IO ()
 cabinetPrint a = do
@@ -115,7 +134,7 @@ cabinetPrint a = do
     outputData "Alpha"              alpha
     outputData "Volume"             vol
     where
-    System i s = a
+    System i s _ = a
     dia = speakBoxDiam (dimData i)
     (len, vol) = (getBoxLength s i, getBoxVolume s i)
     alpha = getAlphaValue s i
@@ -137,7 +156,7 @@ speakerPrint a = do
     outputData "Elec. resistance"   re
     outputData "Coil inductance"    l
     where
-    System i s = a
+    System i s _ = a
     (dinn, dscr, dtot) = (getInnerD s i, getScrewD s i, getTotalD s i)
     (len, sd) = (getThickness s i, getConeSurf s i)
     (bl, kc) = (getBLValue s i, getSpringConstant s i)
@@ -173,7 +192,7 @@ regenPrint a = do
     outputData "Blockage ratio"     br
     outputData "Hydraulic radius"   hr
     where
-    (dia, len) = (getBigTubeD a, getHEXLength a)
+    (dia, len) = (getBigTubeD a, getRegenLength a)
     rd = getRegenData (getInput a)
     (br, hr) = (getBlockRatio rd, getHydRadius rd)
 

@@ -4,7 +4,7 @@ module Utility where
 import Numeric.Units.Dimensional.Prelude (ThermodynamicTemperature, ElectricResistance, Dim, Dimensionless, Quantity, pos2, _5, _2, (/~~), (/~), (*~), one)
 import qualified Numeric.Units.Dimensional.Prelude ((^), (+), (**), (-), (*), (/), log)
 import qualified Numeric.Units.Dimensional
-import Numeric.NumType (Pos1, Neg1, Pos2, Neg2, Zero)
+import Numeric.NumType (Pos1, Neg1, Pos2, Neg2, Neg3, Zero)
 import Data.Function (on)
 import Data.List (minimumBy)
 import Data.Decimal
@@ -55,6 +55,8 @@ type DSpringConstant = Dim Zero Pos1 Neg2 Zero Zero Zero Zero
 type SpringConstant = Quantity DSpringConstant
 type DBLValue = Dim Pos1 Pos1 Neg2 Neg1 Zero Zero Zero
 type BLValue = Quantity DBLValue
+type DVoltage = Dim Pos2 Pos1 Neg3 Neg1 Zero Zero Zero
+type Voltage = Quantity DVoltage
 
 a !+ b = a Prelude.+ b
 a !- b = a Prelude.- b
@@ -63,6 +65,7 @@ a !/ b = a Prelude./ b
 a !^ b = a Prelude.^ b
 a !** b = a Prelude.** b
 psqrt = Prelude.sqrt
+pexp = Prelude.exp
 a !^/ b = b Prelude.** (1 Prelude./ a)
 
 a #+ b = a Numeric.Units.Dimensional.Prelude.+ b
