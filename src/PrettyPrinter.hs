@@ -41,3 +41,21 @@ stdDB = [("m kg s^-2 A^-1", "T\0183m"),
          ("m^-1 kg s^-1", "Pa\0183s")]
 -- \0178 => squared symbol
 -- \0179 => cubed symbol
+-- \0183 => multiplication symbol
+-- \8486 => ohm symbol
+
+compatDB = [("m kg s^-2 A^-1", "T*m"),
+         ("m^2 kg s^-3 A^-2", "ohm"),
+         ("m^2 kg s^-2 A^-2", "H"),
+         ("m^-1 kg s^-2", "Pa"),
+         ("s^-1", "Hz"),
+         ("m s^-1", "m/s"),
+         ("m^2", "m^2"),
+         ("m^3", "m^3"),
+         ("m^2 s^-2 K^-1", "m^2/(K*s^2)"),
+         ("kg s^-2", "kg/s^2"),
+         ("kg s^-1", "kg/s"),
+         ("m^-1", "1/m"),
+         ("m kg s^-3 K^-1", "kg*m/(K*s^3)"),
+         ("m^-3 kg", "kg/m^3"),
+         ("m^-1 kg s^-1", "Pa*s")]

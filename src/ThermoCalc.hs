@@ -6,7 +6,7 @@ import System
 import WorkingFluid
 import Regenerator
 import Diagnostics
-import Display
+--import Display
 import Numeric.Units.Dimensional.Prelude
 import qualified Prelude
 
@@ -26,7 +26,7 @@ ourRawRes = SpeakerResData rf minf maxf cv dmass qm qe
         minf = 90.0   *~ hertz
         maxf = 3000.0 *~ hertz
         cv = 7.93     *~ liter
-        dmass = 20    *~ gram       -- arbitrary
+        dmass = 8.87  *~ gram
         qm = 3.24     *~ one
         qe = 0.89     *~ one
 
@@ -36,7 +36,7 @@ ourRawElec = SpeakerElecData resist induct maxp rmsp imp
         induct = 1.07 *~ milli henry
         maxp = 100.0  *~ watt
         rmsp = 50.0   *~ watt
-        imp = 5.0     *~ ohm        -- not sure
+        imp = 5.0     *~ ohm
 
 ourSpeaker = SpeakerData ourMeasure ourRawRes ourRawElec ourRawDim
 
@@ -76,7 +76,7 @@ diagnostic a = do
     smallTubePrint a
     conePrint a
     capPrint a
-    displayDiag a
+--    displayDiag a
 
 main = diagnostic ourSystem
 

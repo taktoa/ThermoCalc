@@ -30,7 +30,7 @@ outputData :: (Floating a, RealFrac a, Show a, Show d) => String -> Quantity d a
 outputData l d = putStrLn (l ++ ":" ++ replicate (len !- (1 !+ length l)) ' ' ++ (show qtr))
         where
         p = 2
-        qtr = QuantityTr stdDB (round' p d)
+        qtr = QuantityTr compatDB (round' p d)
         
 separator = "--------------------------------------"
 
