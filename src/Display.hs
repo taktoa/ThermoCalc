@@ -32,7 +32,8 @@ speakerDiag a = (rect (spl!/2) 1 ||| cone' (spl!/2) spd 1) # translateX dist
         Dimensional lbox = ulbox / ud1
         Dimensional spl = uspl / ud1
         Dimensional spd = uspd / ud1
-cabitubeDiag a = rect lbox d0 <> speakerDiag                -- Cabinet tube
+
+cabitubeDiag a = rect lbox d0 <> speakerDiag a              -- Cabinet tube
         where
         (ulbox, ud0, ud1) = ((cF getBoxLength) a, (cF getBoxD) a, getBigTubeD a)
         Dimensional lbox = ulbox / ud1
@@ -98,7 +99,6 @@ thintube = thintubeDiag         --    <>  thintubeText
 upcone = upconeDiag             --    <>  upconeText
 cap = capDiag                   --    <>  capText
 
-diag :: System -> a
-diag a = hcat ([cabitube a, inittube a, hothex a, stack a, coldhex a, downcone a, thintube a, upcone a, cap a])
+diag s = cabitube s ||| inittube s ||| hothex s ||| stack s ||| coldhex s ||| downcone s ||| thintube s ||| upcone s ||| cap s
 
-displayDiag a = defaultMain ((diag a) # scale 1)
+displayDiag a = defaultMain (diag a)

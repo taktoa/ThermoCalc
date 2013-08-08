@@ -12,6 +12,7 @@ import Data.Word
 
 a // b = fromIntegral a / fromIntegral b
 e a b = a * (10.0 ** b)                                     -- "e" function; i.e.: 1.3e6 = 1.3 * (10^6) = 1300000
+e' a b = a !* (10.0 !** b)                                  -- "e" function; i.e.: 1.3e6 = 1.3 * (10^6) = 1300000
 
 cang = 9.0                                                  -- Half-angle of the cones, in degrees
 
