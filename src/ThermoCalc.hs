@@ -112,10 +112,10 @@ diagnostic a = do
 
 main = do
     rv <- runErrorT $ do
-        args <- liftIO $ getArgs
-        let al = length args
-        if al == 0 then error "No config file name given" else liftIO $ putStr ""
-        let file = head args
+        --args <- liftIO $ getArgs
+        --let al = length args
+        --if al == 0 then error "No config file name given" else liftIO $ putStr ""
+        let file = "template.cfg"
         cp <- join $ liftIO $ readfile emptyCP file
         ampdial <- get cp "Amplifier"   "dial"
         wgas    <- get cp "WorkingGas"  "gas"

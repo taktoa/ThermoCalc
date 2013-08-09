@@ -67,6 +67,7 @@ a !^ b = a Prelude.^ b
 a !** b = a Prelude.** b
 psqrt = Prelude.sqrt
 pexp = Prelude.exp
+ppyth a b = psqrt ((a !** 2.0) !+ (b !** 2.0))
 a !^/ b = b Prelude.** (1 Prelude./ a)
 
 a #+ b = a Numeric.Units.Dimensional.Prelude.+ b

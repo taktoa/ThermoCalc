@@ -5,6 +5,7 @@ import Input
 import Utility
 import System
 import Speaker
+import Diagnostics
 import Numeric.Units.Dimensional.Prelude
 import Numeric.Units.Dimensional
 import Diagrams.Prelude hiding (lc, tan)
@@ -14,26 +15,27 @@ import qualified Prelude
 
 cone a m n = polygon with {
                     polyType = PolySides [a1, a1, a2, a2] [cs, m, cs, n]
-                } # rotate ((0 !- 90)::Deg) # centerXY
+                } # centerXY # rotate ((0.0 !- 90.0)::Deg) # centerXY
         where
         a1 = Deg (90.0 !+ a)
         a2 = Deg (90.0 !- a)
-        cs = psqrt (((n !- m)!/2)!^2 !+ l!^2)
+        cs = ppyth ((n !- m)!/2.0) l
         l = 0.5 !* (m !- n) !* cot (dtr a)
 
 cone' l m n = cone a m n # rotate (Deg (a !- 90.0))
     where
     a = rtd (Prelude.atan ((m !- n) !/ (2.0 !* l)))
 
-speakerDiag a = (rect (spl!/2) 1 ||| cone' (spl!/2) spd 1) # translateX dist
+speakerDiag a = (rect (spl!/2) 1 ||| cone' (spl!/2) spd 1) # translateX dA # translateX dB
         where
-        dist = (lbox !- 1.5!*spl)!/2
+        dA = lbox !/ 2
+        dB = (0!-0.75)!*spl
         (ulbox, uspl, uspd, ud1) = (cF getBoxLength a, cF getThickness a, cF getInnerD a, getBigTubeD a)
         Dimensional lbox = ulbox / ud1
         Dimensional spl = uspl / ud1
         Dimensional spd = uspd / ud1
 
-cabitubeDiag a = rect lbox d0 <> speakerDiag a              -- Cabinet tube
+cabitubeDiag a = rect lbox d0 <> speakerDiag a   -- Cabinet tube
         where
         (ulbox, ud0, ud1) = ((cF getBoxLength) a, (cF getBoxD) a, getBigTubeD a)
         Dimensional lbox = ulbox / ud1
@@ -78,27 +80,47 @@ capDiag a = wedge (0.5) (270::Deg) (90::Deg)                -- Cap
     --a = location (thintubeDiag # alignL)
     --b = location thintubeText
     --c = location (thintubeDiag # alignR)
+    
+fs = 0.1
+sz = 1
+pl = 1
 
---cabitubeText = dispText lbox " mm" 8 # translateY (d1*0.75)
---inittubeText = dispText lta " mm" 8
---hothexText = dispText lhh " mm" 8 # translateY (d1*0.75)
---stackText = dispText lr " mm" 8
---coldhexText = dispText lhc " mm" 8 # translateY (d1*0.75)
---downconeText = text ""
---thintubeText = dispText lb " mm" 8
---upconeText = text ""
---capText = text ""
+disp n p u = text ((show (round_ p n)) ++ u) # fontSize fs
 
-cabitube = cabitubeDiag         --    <>  cabitubeText
-inittube = inittubeDiag         --    <>  inittubeText
-hothex = hothexDiag             --    <>  hothexText
-stack = stackDiag               --    <>  stackText
-coldhex = coldhexDiag           --    <>  coldhexText
-downcone = downconeDiag         --    <>  downconeText
-thintube = thintubeDiag         --    <>  thintubeText
-upcone = upconeDiag             --    <>  upconeText
-cap = capDiag                   --    <>  capText
+cabitubeText a = disp lbox pl " mm" # translateY 1
+        where
+        Dimensional lbox = ((cF getBoxLength) a) / (1 *~ milli meter)
+inittubeText a = disp lta pl " mm"
+        where
+        Dimensional lta = (getTotalLength a) / (1 *~ milli meter)
+hothexText a = disp lhh pl " mm" # translateY 1
+        where
+        Dimensional lhh = (getHEXLength a) / (0.5 *~ milli meter)
+stackText a = disp lr pl " mm"
+        where
+        Dimensional lr = (getRegenLength a) / (1 *~ milli meter)
+coldhexText a = disp lhc pl " mm" # translateY 1
+        where
+        Dimensional lhc = (getHEXLength a) / (1 *~ milli meter)
+downconeText a = text ""
+thintubeText a = disp lb pl " mm"
+        where
+        Dimensional lb = (getSmallTubeLength a) / (1 *~ milli meter)
+upconeText a = text ""
+capText a = text ""
 
-diag s = cabitube s ||| inittube s ||| hothex s ||| stack s ||| coldhex s ||| downcone s ||| thintube s ||| upcone s ||| cap s
+cabitube a = cabitubeDiag a             <>  cabitubeText a
+inittube a = inittubeDiag a             <>  inittubeText a
+hothex a = hothexDiag a                 <>  hothexText a
+stack a = stackDiag a                   <>  stackText a
+coldhex a = coldhexDiag a               <>  coldhexText a
+downcone a = downconeDiag a             <>  downconeText a
+thintube a = thintubeDiag a             <>  thintubeText a
+upcone a = upconeDiag a                 <>  upconeText a
+cap a = capDiag a                       <>  capText a
+
+diag s = (cabitube s ||| inittube s ||| hothex s ||| stack s ||| coldhex s ||| downcone s ||| thintube s ||| upcone s ||| cap s) # full
+        where
+        full = if checkAll s then scale 1 else bg red
 
 displayDiag a = defaultMain (diag a)
