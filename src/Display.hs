@@ -35,7 +35,7 @@ speakerDiag a = (rect (spl!/2) 1 ||| cone' (spl!/2) spd 1) # translateX dA # tra
         Dimensional spl = uspl / ud1
         Dimensional spd = uspd / ud1
 
-cabitubeDiag a = rect lbox d0 <> speakerDiag a   -- Cabinet tube
+cabitubeDiag a = rect lbox d0 <> speakerDiag a              -- Cabinet tube
         where
         (ulbox, ud0, ud1) = ((cF getBoxLength) a, (cF getBoxD) a, getBigTubeD a)
         Dimensional lbox = ulbox / ud1
@@ -71,19 +71,8 @@ upconeDiag a = cone cang 1 d2                               -- Upcone
         Dimensional d2 = ud2 / ud1
 capDiag a = wedge (0.5) (270::Deg) (90::Deg)                -- Cap
 
---pl = 1
-
---dispText num unit size = text (show_ pl (round_ pl num) ++ unit) # fontSize size
-
---labelline = straight a b
-    --where
-    --a = location (thintubeDiag # alignL)
-    --b = location thintubeText
-    --c = location (thintubeDiag # alignR)
-    
-fs = 0.1
-sz = 1
-pl = 1
+fs = 0.1        -- Font size, where d0/d1 is the height of the whole diagram
+pl = 1          -- Number of decimal places in a label
 
 disp n p u = text ((show (round_ p n)) ++ u) # fontSize fs
 
@@ -95,7 +84,7 @@ inittubeText a = disp lta pl " mm"
         Dimensional lta = (getTotalLength a) / (1 *~ milli meter)
 hothexText a = disp lhh pl " mm" # translateY 1
         where
-        Dimensional lhh = (getHEXLength a) / (0.5 *~ milli meter)
+        Dimensional lhh = (_2 * getHEXLength a) / (1 *~ milli meter)
 stackText a = disp lr pl " mm"
         where
         Dimensional lr = (getRegenLength a) / (1 *~ milli meter)
@@ -109,15 +98,15 @@ thintubeText a = disp lb pl " mm"
 upconeText a = text ""
 capText a = text ""
 
-cabitube a = cabitubeDiag a             <>  cabitubeText a
-inittube a = inittubeDiag a             <>  inittubeText a
-hothex a = hothexDiag a                 <>  hothexText a
-stack a = stackDiag a                   <>  stackText a
-coldhex a = coldhexDiag a               <>  coldhexText a
-downcone a = downconeDiag a             <>  downconeText a
-thintube a = thintubeDiag a             <>  thintubeText a
-upcone a = upconeDiag a                 <>  upconeText a
-cap a = capDiag a                       <>  capText a
+cabitube a = cabitubeDiag a     <>  cabitubeText a
+inittube a = inittubeDiag a     <>  inittubeText a
+hothex a = hothexDiag a         <>  hothexText a
+stack a = stackDiag a           <>  stackText a
+coldhex a = coldhexDiag a       <>  coldhexText a
+downcone a = downconeDiag a     <>  downconeText a
+thintube a = thintubeDiag a     <>  thintubeText a
+upcone a = upconeDiag a         <>  upconeText a
+cap a = capDiag a               <>  capText a
 
 diag s = (cabitube s ||| inittube s ||| hothex s ||| stack s ||| coldhex s ||| downcone s ||| thintube s ||| upcone s ||| cap s) # full
         where

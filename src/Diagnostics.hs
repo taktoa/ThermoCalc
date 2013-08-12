@@ -41,17 +41,25 @@ checkSpkrF a = (f > fmin) && (f < fmax)                     -- Frequency must be
         f = getFrequency i
         (fmin, fmax) = (getMinFreq s i, getMaxFreq s i)
 
--------------------------------------------------------------------
+checkAll :: System -> Bool
+checkAll s = and (imap l s)
+        where
+        l = [checkMach, checkRatio, checkSpkrF, checkStack, checkTD, checkTPD, checkVPD]
+
+checker :: (a -> Bool) -> a -> String -> String -> IO ()
+checker f s a b = putStrLn (if (f s) then a else b)
+
+------------------------------------------------------------------------
 
 len = 20
 
 outputData :: (Floating a, RealFrac a, Show a, Show d) => String -> Quantity d a -> IO ()
 outputData l d = putStrLn (l ++ ":" ++ replicate (len !- (1 !+ length l)) ' ' ++ (show qtr))
         where
-        p = 6
+        p = 10
         qtr = QuantityTr compatDB (round' p d)
         
-separator = "--------------------------------------"
+separator = "----------------------------------------------------------"
 
 enviroPrint :: System -> IO ()
 enviroPrint a = do
@@ -92,6 +100,7 @@ syspropPrint a = do
     outputData "Rel. loudness"      rloud
     outputData "Actual COP"         acop
     outputData "Maximum COP"        mcop
+    outputData "Efficiency"         (acop / mcop)
     outputData "Frequency"          f
     outputData "Wavelength"         wl
     outputData "Wavenumber"         k
@@ -112,18 +121,19 @@ syspropPrint a = do
     (dt, dtn, dp, dpn) = (getTD i, getNTD i, getPD a, getNPD a)
     (dk, dkn, dv, dvn) = (getTPD i, getNTPD i, getVPD i, getNVPD i)
 
+
+
 diagChecks :: System -> IO ()
 diagChecks a = do
-    putStrLn "-------------------"
+    putStrLn separator
     putStrLn "DIAGNOSTICS:"
-    putStrLn (if checkMach a    then "Mach number check passed."    else "Mach number too high!")
-    putStrLn (if checkTPD a     then "TPD check passed."            else "TPD check failed!")
-    putStrLn (if checkVPD a     then "VPD check passed."            else "VPD check failed!")
-    putStrLn (if checkTD a      then "TD check passed."             else "TD check failed!")
-    putStrLn (if checkStack a   then "Stack check passed."          else "Stack check failed!")
-    putStrLn (if checkRatio a   then "Ratio check passed."          else "Ratio check failed!")
-    putStrLn (if checkSpkrF a   then "Speaker freq check passed."   else "Speaker freq check failed!")
-    putStrLn ""
+    checker checkMach   a  "Mach number check passed."   "Mach number too high!"
+    checker checkTPD    a  "TPD check passed."           "TPD check failed!"
+    checker checkVPD    a  "VPD check passed."           "VPD check failed!"
+    checker checkTD     a  "TD check passed."            "TD check failed!"
+    checker checkStack  a  "Stack check passed."         "Stack check failed!"
+    checker checkRatio  a  "Ratio check passed."         "Ratio check failed!"
+    checker checkSpkrF  a  "Speaker freq check passed."  "Speaker freq check failed!"
 
 cabinetPrint :: System -> IO ()
 cabinetPrint a = do

@@ -59,6 +59,9 @@ type BLValue = Quantity DBLValue
 type DVoltage = Dim Pos2 Pos1 Neg3 Neg1 Zero Zero Zero
 type Voltage = Quantity DVoltage
 
+imap :: [a -> b] -> a -> [b]
+imap fs s = zipWith ($) fs (replicate (length fs) s)
+
 a !+ b = a Prelude.+ b
 a !- b = a Prelude.- b
 a !* b = a Prelude.* b
