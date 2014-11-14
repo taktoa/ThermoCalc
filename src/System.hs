@@ -193,3 +193,9 @@ xn a = bestRoot' optX (dist, _1 - dist) accD
         cm = copMax a
         optX x = (cm - fixedCOP x a) / cm
         dist = 0.1 *~ one
+
+ln :: System -> DimlessDouble
+ln a = (_4*pi*lrest/wl) - (_2 * (xn a))
+        where
+        wl = getWavelength (getInput a)
+        lrest = getMaxLength a

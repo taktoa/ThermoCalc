@@ -10,7 +10,7 @@ import Numeric.Units.Dimensional.Prelude
 import Numeric.Units.Dimensional
 import Diagrams.Prelude hiding (lc, tan)
 import Diagrams.Segment
-import Diagrams.Backend.Cairo.CmdLine (defaultMain)
+import Diagrams.Backend.Postscript.CmdLine (defaultMain)
 import qualified Prelude
 
 cone a m n = polygon with {
@@ -42,7 +42,7 @@ cabitubeDiag a = rect lbox d0 <> speakerDiag a              -- Cabinet tube
         Dimensional d0 = ud0 / ud1
 inittubeDiag a = rect lta 1                                 -- Initial tube
         where
-        (ulta, ud1) = (getTotalLength a, getBigTubeD a)
+        (ulta, ud1) = (getBigTubeLength a, getBigTubeD a)
         Dimensional lta = ulta / ud1
 hothexDiag a = rect (2!*lhex) 1                             -- Hot heat exchanger
         where
@@ -81,7 +81,7 @@ cabitubeText a = disp lbox pl " mm" # translateY 1
         Dimensional lbox = ((cF getBoxLength) a) / (1 *~ milli meter)
 inittubeText a = disp lta pl " mm"
         where
-        Dimensional lta = (getTotalLength a) / (1 *~ milli meter)
+        Dimensional lta = (getBigTubeLength a) / (1 *~ milli meter)
 hothexText a = disp lhh pl " mm" # translateY 1
         where
         Dimensional lhh = (_2 * getHEXLength a) / (1 *~ milli meter)

@@ -57,7 +57,7 @@ outputData :: (Floating a, RealFrac a, Show a, Show d) => String -> Quantity d a
 outputData l d = putStrLn (l ++ ":" ++ replicate (len !- (1 !+ length l)) ' ' ++ (show qtr))
         where
         p = 10
-        qtr = QuantityTr compatDB (round' p d)
+        qtr = QuantityTr stdDB (round' p d)
         
 separator = "----------------------------------------------------------"
 
@@ -201,10 +201,13 @@ regenPrint a = do
     outputData "Length"             len
     outputData "Blockage ratio"     br
     outputData "Hydraulic radius"   hr
+    outputData "xn"   xno
+    outputData "ln"   lno
     where
     (dia, len) = (getBigTubeD a, getRegenLength a)
     rd = getRegenData (getInput a)
     (br, hr) = (getBlockRatio rd, getHydRadius rd)
+    (xno, lno) = (xn a, ln a)
 
 conePrint :: System -> IO ()
 conePrint a = do

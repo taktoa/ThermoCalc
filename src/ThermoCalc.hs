@@ -7,7 +7,7 @@ import System
 import WorkingFluid
 import Regenerator
 import Diagnostics
-import Display
+--import Display
 
 import Data.ConfigFile
 import Control.Monad.Error
@@ -107,7 +107,7 @@ diagnostic a = do
     conePrint a
     capPrint a
     diagChecks a
-    displayDiag a
+--    displayDiag a
 
 
 main = do
